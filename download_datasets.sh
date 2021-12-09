@@ -18,8 +18,8 @@ wget -P ./data http://datasets.syr.edu/uploads/1283158247/YouTube-dataset.zip
 unzip -d data data/YouTube-dataset.zip
 
 # Reddit
-# wget -P ./data http://snap.stanford.edu/graphsage/reddit.zip
-# unzip -d data data/reddit.zip
+wget -P ./data http://snap.stanford.edu/graphsage/reddit.zip
+unzip -d data data/reddit.zip
 
 # Twitter (larger than the original dataset)
 wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
@@ -30,12 +30,12 @@ wget -P ./data https://snap.stanford.edu/data/soc-Epinions1.txt.gz
 gunzip ./data/soc-Epinions1.txt.gz
 
 # DBLP (larger than the original dataset)
-# wget -P ./data https://originalstatic.aminer.cn/misc/dblp.v13.7z
-# unzip -d data data/dblp.v13.7z
+wget -P ./data https://originalstatic.aminer.cn/misc/dblp.v13.7z
+7za e ./data/dblp.v13.7z -o./data
 
 # CoCit (also not original dataset)
-# wget -P ./data https://academicgraphv2.blob.core.windows.net/oag/linkage/paper_linking_pairs.zip
-# unzip -d data data/paper_linking_pairs.zip
+wget -P ./data https://academicgraphv2.blob.core.windows.net/oag/linkage/paper_linking_pairs.zip
+unzip -d data data/paper_linking_pairs.zip
 
 # Cora
 wget -P ./data http://konect.cc/files/download.tsv.subelj_cora.tar.bz2 
