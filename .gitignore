@@ -5,6 +5,9 @@
 # All datasets
 data/
 
+# Mac files
+.DS_Store
+
 ##########################################
 # Automatically generated 
 ##########################################
