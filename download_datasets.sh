@@ -1,3 +1,5 @@
+# Sebastian Haslebacher 2021-12
+
 # Create data directory
 mkdir data
 
