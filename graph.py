@@ -26,12 +26,9 @@ def add_edges(G, edges):
             G.add_edge(int(edge[0]), int(edge[1]))
 
 def main(args):
-    nodes = args.nodes_path # '../data/BlogCatalog-dataset/data/nodes.csv'
-    edges = args.edges_path # '../data/BlogCatalog-dataset/data/edges.csv'
-    output_file = args.output_path # 'blog_catalog_graph'
-    G = load_graph(nodes, edges)
+    G = load_graph(args.nodes_path, args.edges_path)
     # https://networkx.org/documentation/stable/reference/readwrite/gpickle.html
-    nx.write_gpickle(G, output_file) # '../data/BlogCatalog-dataset/blog_catalog_graph.gpickle')
+    nx.write_gpickle(G, args.output_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='load data into networkx pickle')
