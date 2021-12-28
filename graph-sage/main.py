@@ -1,5 +1,6 @@
 # author: Luca Marini
-# inspired by https://github.com/stellargraph/stellargraph
+# inspired by https://colab.research.google.com/github/stellargraph/stellargraph/blob/master/demos/embeddings/
+# graphsage-unsupervised-sampler-embeddings.ipynb
 
 import argparse
 import random
