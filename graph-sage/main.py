@@ -24,7 +24,8 @@ from dataset_utils import *
 
 
 def main(args):
-    cora_dataset, G, node_subjects, nodes = get_cora()
+    # load dataset
+    cora_dataset, G, node_subjects, nodes = get_dataset(args.dataset)
 
     unsupervised_samples = UnsupervisedSampler(
         G, nodes=nodes, length=args.length, number_of_walks=args.number_of_walks
@@ -117,7 +118,7 @@ def main(args):
 
 
 
-
+    # node classification
     '''
     # X will hold the 50 input features (node embeddings)
     X = node_embeddings
@@ -140,11 +141,15 @@ def main(args):
     print(pd.Series(y).value_counts())
     '''
 
+    # link prediction
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='graphsage - generation of node embeddings')
 
     # command-line arguments
+    parser.add_argument('-dataset', dest='dataset', type=str,
+                        help='chosen dataset', action='store', default="cora")
     parser.add_argument('--seed', dest='seed', type=int,
                         help='fix random seeds', action='store', default=1)
     parser.add_argument('-e', dest='epochs', type=int,
