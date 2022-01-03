@@ -2,6 +2,8 @@
 # inspired by https://colab.research.google.com/github/stellargraph/stellargraph/blob/master/demos/embeddings/
 # graphsage-unsupervised-sampler-embeddings.ipynb
 
+import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
+
 import tensorflow as tf
 import argparse
 import random
@@ -27,13 +29,19 @@ from dataset_utils import *
 
 def main(args):
     # load dataset
-    cora_dataset, G, labels, nodes = get_dataset(args.dataset)
+    G, labels, nodes = get_dataset(args.dataset)
+
+    # https://networkx.org/documentation/stable/reference/readwrite/gpickle.html
+    #G = nx.read_gpickle("./data/Youtube-dataset/youtube_graph.gpickle")
+    #print('Loaded graph with %d nodes and %d edges' % (len(G.nodes), len(G.edges)))
 
     unsupervised_samples = UnsupervisedSampler(
         G, nodes=nodes, length=args.length, number_of_walks=args.number_of_walks
     )
 
     generator = GraphSAGELinkGenerator(G, args.batch_size, args.num_samples)
+    #generator = GraphSAGENodeGenerator(G, args.batch_size, args.num_samples)
+
     train_gen = generator.flow(unsupervised_samples)
 
     graphsage_model = GraphSAGE(
@@ -49,13 +57,10 @@ def main(args):
 
     model = keras.Model(inputs=x_inp, outputs=prediction)
 
-    num_classes = len(set(labels))
     model.compile(
         optimizer=keras.optimizers.Adam(learning_rate=args.learning_rate),
         loss=keras.losses.binary_crossentropy,
-        metrics=[keras.metrics.binary_accuracy]#,
-                 #tfa.metrics.F1Score(num_classes=num_classes, average='micro', name='f1_micro'),
-                 #tfa.metrics.F1Score(num_classes=num_classes, average='macro', name='f1_macro')],
+        metrics=[keras.metrics.binary_accuracy]
     )
 
     history = model.fit(
@@ -96,7 +101,6 @@ def main(args):
         print("\t{}: {:0.4f}".format(name, val))
     '''
 
-
     x_inp_src = x_inp[0::2]
     x_out_src = x_out[0]
     embedding_model = keras.Model(inputs=x_inp_src, outputs=x_out_src)
@@ -107,7 +111,6 @@ def main(args):
     node_embeddings = embedding_model.predict(node_gen, workers=4, verbose=1)
 
     node_subject = labels.astype("category").cat.codes
-
 
     '''
     # plot of the node embeddings
@@ -140,10 +143,6 @@ def main(args):
     plt.show()
     '''
 
-
-
-
-
     # Downstream task
     if args.task == "node_classification":
         # node classification
@@ -160,40 +159,6 @@ def main(args):
     
         clf = LogisticRegression(verbose=0, solver="lbfgs", multi_class="auto")
         clf.fit(X_train, y_train)
-        '''
-        print(X_train.shape)
-        print(y_train.shape)
-        print(X_test.shape)
-        print(y_test.shape)
-
-        inputs = tf.keras.Input(shape=y_train.shape)
-        #outputs = tf.keras.Output(shape=y_test.shape)
-        print(x_inp)
-        print('oooo')
-        print(x_inp_src)
-        model = keras.Model(inputs=inputs, outputs=x_out_src)
-
-        num_classes = len(set(labels))
-        model.compile(
-            optimizer=keras.optimizers.Adam(learning_rate=args.learning_rate),
-            loss=keras.losses.binary_crossentropy,
-            metrics=[keras.metrics.binary_accuracy,
-                     tfa.metrics.F1Score(num_classes=num_classes, average='micro', name='f1_micro'),
-                     tfa.metrics.F1Score(num_classes=num_classes, average='macro', name='f1_macro')],
-        )
-    
-        history = model.fit(
-            x=X_train,
-            y=y_train,
-            epochs=args.epochs,
-            verbose=1,
-            use_multiprocessing=False,
-            workers=4,
-            shuffle=True,
-        )
-        
-        y_pred = model.predict(X_test) 
-        '''
 
         y_pred = clf.predict(X_test)
 
@@ -216,7 +181,7 @@ if __name__ == '__main__':
     parser.add_argument('-task', dest='task', type=str,
                         help='downstream task', action='store', default="node_classification")
     parser.add_argument('-dataset', dest='dataset', type=str,
-                        help='chosen dataset', action='store', default="pubmed")
+                        help='chosen dataset', action='store', default="blog_catalog")
     parser.add_argument('--seed', dest='seed', type=int,
                         help='fix random seeds', action='store', default=1)
     parser.add_argument('-e', dest='epochs', type=int,
