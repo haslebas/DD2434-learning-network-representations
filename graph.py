@@ -5,12 +5,12 @@ import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
 import csv
 import argparse
 
-def load_graph(nodes, edges):
+def load_graph(nodes, edges, undirected):
     G = nx.Graph()
 
     # add the nodes
     add_nodes(G, nodes)
-    add_edges(G, edges)
+    add_edges(G, edges, undirected)
     return G
 
 def add_nodes(G, nodes):
@@ -19,14 +19,19 @@ def add_nodes(G, nodes):
         for node in datareader:
             G.add_node(int(node[0]))
 
-def add_edges(G, edges):
+def add_edges(G, edges, undirected):
     with open(edges, 'r') as csvfile:
         datareader = csv.reader(csvfile)
         for edge in datareader:
             G.add_edge(int(edge[0]), int(edge[1]))
+            if undirected:
+                G.add_edge(int(edge[1]), int(edge[0]))
 
 def main(args):
-    G = load_graph(args.nodes_path, args.edges_path)
+    # variable that must be true if the csv file containing the edges is about an undirected graph and does not contain
+    # both direction of each edge
+    undirected = True
+    G = load_graph(args.nodes_path, args.edges_path, undirected)
     # https://networkx.org/documentation/stable/reference/readwrite/gpickle.html
     nx.write_gpickle(G, args.output_path)
 
