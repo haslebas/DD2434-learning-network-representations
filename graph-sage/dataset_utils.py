@@ -1,10 +1,12 @@
 # author: Luca Marini
+import stellargraph as sg
 from stellargraph import StellarGraph
 from stellargraph import datasets
-import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
+import networkx as nx  # https://networkx.org/documentation/stable/tutorial.html
 import csv
 import numpy as np
 import pandas as pd
+import os
 
 
 def get_graph_from_pickle(pickle_path, get_node_features=False, nodes_path=None):
@@ -24,7 +26,7 @@ def get_node_labels(node_labels_path):
     node_labels_df = pd.read_csv(node_labels_path, index_col=False, header=None)
     labels = node_labels_df.set_index(0)[1]
     labels.name = "labels"
-    #print(labels)
+    # print(labels)
     return labels
 
 
@@ -32,7 +34,7 @@ def get_dataset(dataset_name):
     labels = []
     if dataset_name == "cora":
         dataset = datasets.Cora()
-        G, labels = dataset.load()
+        G, labels = dataset.load(directed=True)
     elif dataset_name == "pubmed":
         dataset = datasets.PubMedDiabetes()
         G, labels = dataset.load()
@@ -46,6 +48,7 @@ def get_dataset(dataset_name):
                                   nodes_path="../data/YouTube-dataset/data/nodes.csv")
 
         labels = get_node_labels("../data/YouTube-dataset/data/group-edges.csv")
+
     else:
         raise Exception('The specified dataset is not available')
 
