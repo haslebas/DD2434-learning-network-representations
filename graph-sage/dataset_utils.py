@@ -32,7 +32,7 @@ def get_dataset(dataset_name):
     labels = []
     if dataset_name == "cora":
         dataset = datasets.Cora()
-        G, labels = dataset.load()
+        G, labels = dataset.load(directed=True)
     elif dataset_name == "pubmed":
         dataset = datasets.PubMedDiabetes()
         G, labels = dataset.load()
