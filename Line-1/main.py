@@ -102,7 +102,7 @@ if __name__ == "__main__":
     parser.add_argument('-K', dest='K', type=int, 
         help='number of negative samples for every edge', action='store', default=5)
     parser.add_argument('-d', dest='d', type=int, 
-        help='dimensionality of embeddings', action='store', default=2)
+        help='dimensionality of embeddings', action='store', default=128)
 
     args = parser.parse_args()
     random.seed(args.seed)
