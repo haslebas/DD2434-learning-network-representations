@@ -37,7 +37,7 @@ def sig(x):
     """
     return (1 / (1 + np.exp(-x)))
 
-def line_first_order(G, epochs, K, d):
+def line_first_order(G, epochs, K, d, eps=0.1):
     """
     G: networkx graph
     epochs: number of times each edge is considered
@@ -63,17 +63,21 @@ def line_first_order(G, epochs, K, d):
             
             # updates for negative edges
             for nbr in neg_nbrs:
-                del_u -= E[nbr] * (1 - sig(-np.dot(E[nbr], E[u])))
-                del_v -= E[nbr] * (1 - sig(-np.dot(E[v], E[nbr])))
+                del_u -= E[nbr] * (1 - sig(-np.dot(E[nbr], E[u]))) / K
+                del_v -= E[nbr] * (1 - sig(-np.dot(E[v], E[nbr]))) / K
 
-            E[u] += del_u # TODO: check whether step is in right direction
-            E[v] += del_v    
+            # only update one of the two endpoints
+            coin = random.randint(0, 1)
+            if(coin):
+                E[u] += eps * del_u
+            else:
+                E[v] += eps * del_v    
 
-            if ((t + 1) % 1000 == 0):
+            if ((t + 1) % 10000 == 0):
                 print('Completed %d out of %d edges in epoch %d'%(t + 1, len(G.edges), e))  
-                print(neg_nbrs)
             t += 1  
         print('Completed epoch %d'%(e))
+        print(E[1])
     return E
 
 def main(args):
