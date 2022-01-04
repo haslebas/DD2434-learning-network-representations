@@ -11,3 +11,6 @@ python3 graph.py ./data/Youtube-dataset/data/nodes.csv ./data/Youtube-dataset/da
 # load Flickr dataset and pickle the constructed networkx graph
 python3 graph.py ./data/Flickr-dataset/data/nodes.csv ./data/Flickr-dataset/data/edges.csv ./data/Flickr-dataset/flickr_graph.gpickle
 python3 graph.py ./data/Flickr-dataset/data/nodes.csv ./data/Flickr-dataset/data/edges.csv ./data/Flickr-dataset/flickr_graph_lp.gpickle -l
+
+# load Twitter dataset and pickle the constructed networkx graph
+python3 graph.py ./data/Twitter-dataset/data/nodes.csv ./data/Twitter-dataset/data/edges.csv ./data/Twitter-dataset/twitter_graph_lp.gpickle -l
