@@ -39,7 +39,7 @@ def deepwalk_approx(eigen_vals, D_inv_sqrt_U, w, vol_G, b):
     # Spectrum filter - the sum of the powers of the eigen values
     filter = eigenval_filter(eigen_vals, w)
     # take sqrt so that we can take dot prod of term and its transpose..
-    M_sqrt = sparse.diags(np.sqrt(filter)).dot(D_inv_sqrt_U.T).T
+    M_sqrt = np.sqrt(filter).dot(D_inv_sqrt_U.T).T
     M = np.dot(M_sqrt, M_sqrt.T) * vol_G/b
     print('M shape (before max): ', M.shape)
     M_prime_log = np.log(np.maximum(M, 1))
@@ -112,7 +112,7 @@ def main(args):
     # np.save(args.output_path, netmf_embedding)
     # make embedding a dict:
     E = {}
-    for idx in range(netmf_embedding.shape[0]-1):
+    for idx in range(netmf_embedding.shape[0]):
         E[idx+1] = netmf_embedding[idx]
     with open(args.output_path, 'wb') as handle:
         pickle.dump(E, handle)
