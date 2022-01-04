@@ -18,7 +18,7 @@ def deep_walk(G, w, d, n_walks, t):
     for node in G.nodes:
         for i in range(n_walks):
             current_walk = []
-            walk_node = str(node) # set the initial walk node
+            walk_node = node # set the initial walk node
             current_walk.append(walk_node)
             for j in range(t):
                 neighbors = list(G.edges([walk_node])) # get the neighbors
@@ -28,14 +28,14 @@ def deep_walk(G, w, d, n_walks, t):
                     walk_node = picked_edge[1]
                 else:
                     walk_node = picked_edge[0]
-                current_walk.append(walk_node)
+                current_walk.append(int(walk_node))
 
             walks.append(current_walk)
     print('total number of walks: ', len(walks))
     print('creating embeddings...')
     # create skip-gram embeddings based on existing implementation
     # TODO: this seems to make embeddinbgs for n_nodes / 2 -- why?
-    embedding = Word2Vec(walks, size=d, window=w, min_count=0, workers=2, sg=1, hs=1)
+    embedding = Word2Vec(walks, vector_size=d, window=w, min_count=0, workers=2, sg=1, hs=1)
     return embedding
 
 def main(args):
@@ -43,8 +43,23 @@ def main(args):
     G = nx.read_gpickle(args.graph_path)
     print('Loaded graph with %d nodes and %d edges'%(len(G.nodes), len(G.edges)))
     w2v_embedding = deep_walk(G, args.w, args.d, args.n_walks, args.t)
-    w2v_embedding.wv.save_word2vec_format(args.output_path)
-    print('Saved embeddings to file')
+    w2v_embedding.wv.save_word2vec_format(args.output_path+'.txt')
+    # make embedding a dict:
+    E = {}
+    node_embeddings = open(args.output_path+'.txt', 'r')
+    nodes = node_embeddings.readlines()
+    num_nodes = nodes[0]
+    print('num nodes: ', num_nodes)
+    for node in nodes[1:]:
+        tok = node.split()
+        key = int(tok[0])
+        val = np.array(tok[1:], dtype=float)
+        E[key] = val
+
+    with open(args.output_path+'.pkl', 'wb') as handle:
+        pickle.dump(E, handle)
+    print('Saved DeepWalk embeddings to pkl file')
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='learn network representations with Line')
@@ -57,9 +72,9 @@ if __name__ == "__main__":
     parser.add_argument('--seed', dest='seed', type=int, 
         help='fix random seeds', action='store', default=1)
     parser.add_argument('-d', dest='d', type=int, 
-        help='embedding length', action='store', default=100)
+        help='embedding length', action='store', default=128)
     parser.add_argument('-n_walks', dest='n_walks', type=int, 
-        help='number of walks for each node', action='store', default=3)
+        help='number of walks for each node', action='store', default=5)
     parser.add_argument('-t', dest='t', type=int, 
         help='random walk length', action='store', default=10)
     parser.add_argument('-w', dest='w', type=int, 
