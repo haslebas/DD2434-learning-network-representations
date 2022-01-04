@@ -17,7 +17,7 @@ def get_graph_from_pickle(pickle_path, get_node_features=False, nodes_path=None)
         node_features_df.columns += 1
 
         G = StellarGraph.from_networkx(G, node_features=node_features_df)
-    return G
+    return G 
 
 
 def get_node_labels(node_labels_path):
@@ -32,7 +32,7 @@ def get_dataset(dataset_name):
     labels = []
     if dataset_name == "cora":
         dataset = datasets.Cora()
-        G, labels = dataset.load()
+        G, labels = dataset.load(directed=True)
     elif dataset_name == "pubmed":
         dataset = datasets.PubMedDiabetes()
         G, labels = dataset.load()
