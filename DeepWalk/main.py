@@ -18,17 +18,18 @@ def deep_walk(G, w, d, n_walks, t):
     for node in G.nodes:
         for i in range(n_walks):
             current_walk = []
-            walk_node = node # set the initial walk node
-            current_walk.append(walk_node)
+            walk_node = int(node) # set the initial walk node
+            current_walk.append(str(walk_node))
             for j in range(t):
                 neighbors = list(G.edges([walk_node])) # get the neighbors
-                picked_edge = random.choice(neighbors)
-                # picked edge is a tuple -- select the new node
-                if picked_edge[0] == str(walk_node):
-                    walk_node = picked_edge[1]
-                else:
-                    walk_node = picked_edge[0]
-                current_walk.append(int(walk_node))
+                if (len(neighbors) > 0): # only take a step if current node has out-edge!
+                    picked_edge = random.choice(neighbors)
+                    # picked edge is a tuple -- select the new node
+                    if int(picked_edge[0]) == walk_node:
+                        walk_node = int(picked_edge[1])
+                    else:
+                        walk_node = int(picked_edge[0])
+                current_walk.append(str(walk_node))
 
             walks.append(current_walk)
     print('total number of walks: ', len(walks))
@@ -74,7 +75,7 @@ if __name__ == "__main__":
     parser.add_argument('-d', dest='d', type=int, 
         help='embedding length', action='store', default=128)
     parser.add_argument('-n_walks', dest='n_walks', type=int, 
-        help='number of walks for each node', action='store', default=5)
+        help='number of walks for each node', action='store', default=1)
     parser.add_argument('-t', dest='t', type=int, 
         help='random walk length', action='store', default=10)
     parser.add_argument('-w', dest='w', type=int, 

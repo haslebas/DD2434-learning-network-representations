@@ -6,55 +6,45 @@ import csv
 import argparse
 import random
 import pickle
+from stellargraph.data import EdgeSplitter
 
-
-def load_graph(nodes, edges, link_prediction):
-    G = nx.Graph()
+def load_graph(nodes, edges):
+    G = nx.MultiGraph()
 
     # add the nodes
-    V = add_nodes(G, nodes)
-    test_edges = add_edges(G, edges, link_prediction)
+    add_nodes(G, nodes)
+    add_edges(G, edges)
 
-    # add negative samples for link_prediction
-    # TODO: make sure that negative samples are truly negative
-    m = len(test_edges)
-    A = random.choices(V, k=m)
-    B = random.choices(V, k=m)
-    test_edges.extend(zip(A, B))
-
-    return G, test_edges
+    return G
 
 
 def add_nodes(G, nodes):
-    V = []
     with open(nodes, 'r') as csvfile:
         datareader = csv.reader(csvfile)
         for node in datareader:
-            V.append(int(node[0]))
             G.add_node(int(node[0]))
-    return V
 
-
-def add_edges(G, edges, link_prediction):
-    E = []
+def add_edges(G, edges):
     with open(edges, 'r') as csvfile:
         datareader = csv.reader(csvfile)
         for edge in datareader:
-            # TODO: make sure that no node ends up isolated
-            coin = random.randint(0, 1)
-            if coin and link_prediction:
-                E.append((int(edge[0]), int(edge[1])))
-            else:
-                G.add_edge(int(edge[0]), int(edge[1]))
-    return E
+            G.add_edge(int(edge[0]), int(edge[1]))
 
 def main(args):
-    G, test_edges = load_graph(args.nodes_path, args.edges_path, args.lp)
-    # https://networkx.org/documentation/stable/reference/readwrite/gpickle.html
-    nx.write_gpickle(G, args.output_path)
+    G = load_graph(args.nodes_path, args.edges_path)
+    
     if args.lp:
+        s = EdgeSplitter(G)
+        G, E, _ = s.train_test_split(keep_connected=True, seed=args.seed)
+        test_edges = []
+        for edge in E:
+            test_edges.append((int(edge[0]), int(edge[1])))
+        
         with open(args.output_path[:-8] + '_test_edges.pkl', 'wb') as f:
             pickle.dump(test_edges, f)
+
+    # https://networkx.org/documentation/stable/reference/readwrite/gpickle.html
+    nx.write_gpickle(G, args.output_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='load data into networkx pickle')
