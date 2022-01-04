@@ -11,3 +11,9 @@ python3 graph.py ./data/Youtube-dataset/data/nodes.csv ./data/Youtube-dataset/da
 # load Flickr dataset and pickle the constructed networkx graph
 python3 graph.py ./data/Flickr-dataset/data/nodes.csv ./data/Flickr-dataset/data/edges.csv ./data/Flickr-dataset/flickr_graph.gpickle
 python3 graph.py ./data/Flickr-dataset/data/nodes.csv ./data/Flickr-dataset/data/edges.csv ./data/Flickr-dataset/flickr_graph_lp.gpickle -l
+
+# load Cora dataset and pickle the constructed networkx graph
+python3 directed_graph.py ./data/Cora-dataset/cora_graph_dir.gpickle cora 
+
+# load PubMed dataset and pickle the constructed networkx graph
+python3 directed_graph.py ./data/Pubmed-Diabetes/pubmed_graph_undir.gpickle pubmed 
