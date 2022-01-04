@@ -106,6 +106,9 @@ def main(args):
     embedding_model = keras.Model(inputs=x_inp_src, outputs=x_out_src)
 
     node_ids = labels.index
+    print(node_ids)
+    print(len(node_ids))
+    print(G.info())
     node_gen = GraphSAGENodeGenerator(G, args.batch_size, args.num_samples).flow(node_ids)
 
     node_embeddings = embedding_model.predict(node_gen, workers=4, verbose=1)
@@ -181,7 +184,7 @@ if __name__ == '__main__':
     parser.add_argument('-task', dest='task', type=str,
                         help='downstream task', action='store', default="node_classification")
     parser.add_argument('-dataset', dest='dataset', type=str,
-                        help='chosen dataset', action='store', default="blog_catalog")
+                        help='chosen dataset', action='store', default="flickr")
     parser.add_argument('--seed', dest='seed', type=int,
                         help='fix random seeds', action='store', default=1)
     parser.add_argument('-e', dest='epochs', type=int,
