@@ -8,7 +8,7 @@ import argparse
 def load_graph(edges, link_prediction):
     V = set()
     E = []
-    G = nx.Graph()
+    G = nx.MultiGraph()
     with open(edges, 'r') as csvfile:
         datareader = csv.reader(csvfile)
         for line in datareader:
@@ -24,9 +24,6 @@ def load_graph(edges, link_prediction):
 
     V = list(V)
     nx.write_gpickle(G, "./data/Epinion-dataset/epinion_graph.gpickle")
-    #print(nx.info(G))
-    #G2 = StellarGraph.from_networkx(G)
-    #print(G2.info())
     print(G)
     return G
 
