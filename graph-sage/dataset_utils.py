@@ -52,6 +52,33 @@ def get_dataset(dataset_name):
     elif dataset_name == "epinion":
         G = get_graph_from_pickle("../data/Epinion-dataset/epinion_graph.gpickle", get_node_features=True)
         # TODO: node_ids
+    elif dataset_name == "dbpl":
+        # https://stellargraph.readthedocs.io/en/stable/demos/link-prediction/attri2vec-link-prediction.html
+        data_dir = "../data/DBLP-dataset/data/"
+
+        # Load the graph from the edge list
+        edgelist = pd.read_csv(
+            os.path.join(data_dir, "edgeList.txt"),
+            sep=",",
+            header=None,
+            names=["source", "target"],
+        )
+        edgelist["label"] = "cites"  # set the edge type
+
+        # Load paper content features, subjects and publishing years
+        feature_names = ["w_{}".format(ii) for ii in range(2476)]
+        node_column_names = feature_names + ["subject", "year"]
+        node_data = pd.read_csv(
+            os.path.join(data_dir, "content.txt"), sep="\t", header=None, names=node_column_names
+        )
+        # Construct the whole graph from edge list
+        G_all_nx = nx.from_pandas_edgelist(edgelist, edge_attr="label")
+        # Specify node types
+        nx.set_node_attributes(G_all_nx, "paper", "label")
+        # Get node features
+        all_node_features = node_data[feature_names]
+        # Create the Stellargraph with node features
+        G = sg.StellarGraph.from_networkx(G_all_nx, node_features=all_node_features)
     else:
         raise Exception('The specified dataset is not available')
 
