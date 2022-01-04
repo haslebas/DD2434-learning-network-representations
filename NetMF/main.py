@@ -18,29 +18,29 @@ def svd(M, d):
     return sparse.diags(np.sqrt(S)).dot(U.T).T
 
 def eigenval_filter(eigen_vals, w):
+    for i in range(len(eigen_vals)):
+        eigen_vals[i] = (1 - np.power(eigen_vals[i], w + 1)) / (1 - eigen_vals[i]) - 1
+        eigen_vals[i] = np.sqrt(eigen_vals[i] / w)
+    return sparse.diags(eigen_vals)
+
     # Sum of the powers of the eigen values
-    ev = sparse.diags(eigen_vals)
-    S = np.zeros(ev.shape)
-    P_power = sparse.identity(ev.shape[0])
-    for i in range(w):
-        # Compute power for each window size
-        P_power = P_power.dot(ev)
-        S += P_power
-    # S = S * vol_G / (b * w)
-    # filter_sum = 0
-    # for i in range(w-1):
-        # pow = eigen_vals ** (w+1)
-        # filter_sum += pow
-    # return filter_sum * 1/w
-    return S * 1/w
+    # ev = sparse.diags(eigen_vals)
+    # S = ev
+    # P_power = ev
+    # for i in range(2, w):
+    #     # Compute power for each window size
+    #     P_power = P_power.dot(ev)
+    #     S += P_power
+    # return S * 1/w
 
 def deepwalk_approx(eigen_vals, D_inv_sqrt_U, w, vol_G, b):
     print('Computing M...')
     # Spectrum filter - the sum of the powers of the eigen values
     filter = eigenval_filter(eigen_vals, w)
     # take sqrt so that we can take dot prod of term and its transpose..
-    M_sqrt = np.sqrt(filter).dot(D_inv_sqrt_U.T).T
-    M = np.dot(M_sqrt, M_sqrt.T) * vol_G/b
+    D_inv_sqrt_U = sparse.csr_matrix(D_inv_sqrt_U)
+    M_sqrt = sparse.csr_matrix(filter.dot(D_inv_sqrt_U.T).T)
+    M = sparse.csr_matrix(M_sqrt.dot(M_sqrt.T) * vol_G/b)
     print('M shape (before max): ', M.shape)
     M_prime_log = np.log(np.maximum(M, 1))
     return M_prime_log
@@ -101,7 +101,6 @@ def main(args):
     print('Loaded graph with %d nodes and %d edges'%(len(G.nodes), len(G.edges)))
     # Create adjacency matrix
     A = nx.linalg.graphmatrix.adjacency_matrix(G)
-    A = np.array(A.todense())
     if args.large_window:
         print('Running approximation for large window size')    
         netmf_embedding = net_mf_approx(A, args.r, args.w, args.b, args.d)

@@ -14,3 +14,6 @@ python3 graph.py ./data/Flickr-dataset/data/nodes.csv ./data/Flickr-dataset/data
 
 # load Twitter dataset and pickle the constructed networkx graph
 python3 graph.py ./data/Twitter-dataset/data/nodes.csv ./data/Twitter-dataset/data/edges.csv ./data/Twitter-dataset/twitter_graph_lp.gpickle -l
+
+# load Epinion dataset and pickle the constructed networkx graph
+python3 load_epinion.py ./data/Epinions-dataset/soc-Epinions1.txt ./data/Epinions-dataset/epinions_graph_lp.gpickle
