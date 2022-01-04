@@ -9,7 +9,7 @@ import pickle
 
 
 def load_graph(nodes, edges, link_prediction):
-    G = nx.Graph()
+    G = nx.MultiGraph()
 
     # add the nodes
     V = add_nodes(G, nodes)
