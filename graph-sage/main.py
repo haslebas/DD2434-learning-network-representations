@@ -184,7 +184,7 @@ if __name__ == '__main__':
     parser.add_argument('-task', dest='task', type=str,
                         help='downstream task', action='store', default="node_classification")
     parser.add_argument('-dataset', dest='dataset', type=str,
-                        help='chosen dataset', action='store', default="flickr")
+                        help='chosen dataset', action='store', default="reddit")
     parser.add_argument('--seed', dest='seed', type=int,
                         help='fix random seeds', action='store', default=1)
     parser.add_argument('-e', dest='epochs', type=int,

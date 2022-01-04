@@ -49,6 +49,8 @@ def get_dataset(dataset_name):
     elif dataset_name == "flickr":
         G = get_graph_from_pickle("../data/Flickr-dataset/flickr_graph.gpickle", get_node_features=True)
         labels = get_node_labels("../data/Flickr-dataset/data/group-edges.csv")
+    elif dataset_name == "reddit":
+        G = get_graph_from_pickle("../data/Reddit-dataset/reddit_graph.gpickle", get_node_features=True)
     elif dataset_name == "epinion":
         G = get_graph_from_pickle("../data/Epinion-dataset/epinion_graph.gpickle", get_node_features=True)
         # TODO: node_ids
@@ -81,7 +83,7 @@ def get_dataset(dataset_name):
         G = sg.StellarGraph.from_networkx(G_all_nx, node_features=all_node_features)
     else:
         raise Exception('The specified dataset is not available')
-
+    print(G.info())
     nodes = list(G.nodes())
     #print(nodes)
     return G, labels, nodes
