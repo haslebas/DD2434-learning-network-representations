@@ -8,3 +8,6 @@ python3 node_classification.py ../embeddings/blog_catalog_128d_line_1.pkl ../dat
 
 # DeepWalk BlogCatalog embeddings
 python3 node_classification.py ../data/BlogCatalog-dataset/blog_catalog_deepwalk_128d.pkl ../data/BlogCatalog-dataset/data/group-edges.csv
+
+# DeepWalk Cora embeddings
+python3 node_classification.py ../data/Cora-dataset/cora_deepwalk_128d.pkl ../data/Cora-dataset/data/group-edges.csv
