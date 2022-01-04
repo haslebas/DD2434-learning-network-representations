@@ -5,6 +5,7 @@ import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
 import csv
 import argparse
 import stellargraph as sg
+import pandas as pd
 # from stellargraph import StellarGraph
 # from stellargraph import datasets
 
@@ -28,13 +29,32 @@ def add_edges(G, edges):
         for edge in datareader:
             G.add_edge(int(edge[0]), int(edge[1]))
 
+def save_labels_as_csv(labels, path):
+    node_classes = {}
+    node_labels = []
+    class_num = 0
+    for node, label in labels.items():
+        if label in node_classes:
+            node_labels.append([node, node_classes[label]])
+        else:
+            node_classes[label] = class_num
+            class_num += 1
+    # write the labels to file
+    df = pd.DataFrame(node_labels)
+    df.to_csv(path + 'group-edges.csv', header=None, index=False)
+    classes_list = list(node_classes.items())
+    df_c = pd.DataFrame(classes_list)
+    df_c.to_csv(path + 'groups.csv', header=None, index=False)
+
 def load_stellar_graph(dataset_name):
     if dataset_name == 'cora':
         dataset = sg.datasets.Cora()
         G, labels = dataset.load(directed=True)
+        save_labels_as_csv(labels, args.labels_output_path)
     elif dataset_name == "pubmed":
         dataset = sg.datasets.PubMedDiabetes()
         G, labels = dataset.load()
+        save_labels_as_csv(labels, args.labels_output_path)
     # transform stellargraph to networkx graph representation
     G_nx = G.to_networkx()
     print('G nx: ', G_nx)
@@ -59,6 +79,8 @@ if __name__ == "__main__":
         help='path to store the networkx pickle', action='store')
     parser.add_argument('dataset_name', type=str, 
         help='name of the dataset', action='store')
+    parser.add_argument('labels_output_path', type=str, 
+        help='path to store the label files', action='store')
     parser.add_argument("-f", "--file", dest='from_file',
         help='True if loading graph from csv file', action="store_true")
     parser.add_argument('--nodes_path', type=str, 
