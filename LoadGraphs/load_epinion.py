@@ -7,7 +7,7 @@ import pickle
 from stellargraph.data import EdgeSplitter
 
 def load_graph(edges, link_prediction):
-    G = nx.MultiGraph()
+    G = nx.MultiDiGraph()
     with open(edges, 'r') as csvfile:
         datareader = csv.reader(csvfile)
         for line in datareader:
@@ -23,7 +23,7 @@ def main(args):
     G = load_graph(edges_path, True)
 
     s = EdgeSplitter(G)
-    G, E, _ = s.train_test_split(keep_connected=True, seed=args.seed)
+    G, E, _ = s.train_test_split(keep_connected=False, seed=args.seed)
     test_edges = []
     for edge in E:
         test_edges.append((int(edge[0]), int(edge[1])))

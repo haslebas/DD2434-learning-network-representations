@@ -1,25 +1,25 @@
-# Sebastian Haslebacher 2021-12
-
 # load BlogCatalog dataset and pickle the constructed networkx graph
-python3 graph.py ./data/BlogCatalog-dataset/data/nodes.csv ./data/BlogCatalog-dataset/data/edges.csv ./data/BlogCatalog-dataset/blog_catalog_graph.gpickle
-python3 graph.py ./data/BlogCatalog-dataset/data/nodes.csv ./data/BlogCatalog-dataset/data/edges.csv ./data/BlogCatalog-dataset/blog_catalog_graph_lp.gpickle -l
+python3 graph.py ../data/BlogCatalog-dataset/data/nodes.csv ../data/BlogCatalog-dataset/data/edges.csv ../data/BlogCatalog-dataset/blog_catalog_graph.gpickle
+python3 graph.py ../data/BlogCatalog-dataset/data/nodes.csv ../data/BlogCatalog-dataset/data/edges.csv ../data/BlogCatalog-dataset/blog_catalog_graph_lp.gpickle -l
 
 # load Youtube dataset and pickle the constructed networkx graph
-python3 graph.py ./data/Youtube-dataset/data/nodes.csv ./data/Youtube-dataset/data/edges.csv ./data/Youtube-dataset/youtube_graph.gpickle
-python3 graph.py ./data/Youtube-dataset/data/nodes.csv ./data/Youtube-dataset/data/edges.csv ./data/Youtube-dataset/youtube_graph_lp.gpickle -l
+python3 graph.py ../data/Youtube-dataset/data/nodes.csv ../data/Youtube-dataset/data/edges.csv ../data/Youtube-dataset/youtube_graph.gpickle
+python3 graph.py ../data/Youtube-dataset/data/nodes.csv ../data/Youtube-dataset/data/edges.csv ../data/Youtube-dataset/youtube_graph_lp.gpickle -l
 
 # load Flickr dataset and pickle the constructed networkx graph
-python3 graph.py ./data/Flickr-dataset/data/nodes.csv ./data/Flickr-dataset/data/edges.csv ./data/Flickr-dataset/flickr_graph.gpickle
-python3 graph.py ./data/Flickr-dataset/data/nodes.csv ./data/Flickr-dataset/data/edges.csv ./data/Flickr-dataset/flickr_graph_lp.gpickle -l
+python3 graph.py ../data/Flickr-dataset/data/nodes.csv ../data/Flickr-dataset/data/edges.csv ../data/Flickr-dataset/flickr_graph.gpickle
+python3 graph.py ../data/Flickr-dataset/data/nodes.csv ../data/Flickr-dataset/data/edges.csv ../data/Flickr-dataset/flickr_graph_lp.gpickle -l
 
 # load Twitter dataset and pickle the constructed networkx graph
-python3 graph.py ./data/Twitter-dataset/data/nodes.csv ./data/Twitter-dataset/data/edges.csv ./data/Twitter-dataset/twitter_graph_lp.gpickle -l
+python3 graph.py ../data/Twitter-dataset/data/nodes.csv ../data/Twitter-dataset/data/edges.csv ../data/Twitter-dataset/twitter_graph_lp.gpickle -l
 
 # load Epinion dataset and pickle the constructed networkx graph
-python3 load_epinion.py ./data/Epinions-dataset/soc-Epinions1.txt ./data/Epinions-dataset/epinions_graph_lp.gpickle
+python3 load_epinion.py ../data/Epinions-dataset/soc-Epinions1.txt ../data/Epinions-dataset/epinions_graph_dir_lp.gpickle
 
 # load Cora dataset and pickle the constructed networkx graph
-python3 directed_graph.py ./data/Cora-dataset/cora_graph_dir.gpickle cora 
+python3 directed_graph.py ../data/Cora-dataset/cora_graph_dir.gpickle cora 
+python3 directed_graph.py ../data/Cora-dataset/cora_graph_dir_lp.gpickle cora -l
 
 # load PubMed dataset and pickle the constructed networkx graph
-python3 directed_graph.py ./data/Pubmed-Diabetes/pubmed_graph_undir.gpickle pubmed 
+python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir.gpickle pubmed 
+python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir_lp.gpickle pubmed -l

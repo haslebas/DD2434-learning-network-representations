@@ -5,6 +5,8 @@ import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
 import csv
 import argparse
 import stellargraph as sg
+import pickle
+from stellargraph.data import EdgeSplitter
 # from stellargraph import StellarGraph
 # from stellargraph import datasets
 
@@ -48,6 +50,16 @@ def main(args):
         print('Loading graph from StellarGraph datasets.')
         G = load_stellar_graph(args.dataset_name)
     
+    if args.lp:
+        s = EdgeSplitter(G)
+        G, E, _ = s.train_test_split(keep_connected=False, seed=args.seed)
+        test_edges = []
+        for edge in E:
+            test_edges.append((int(edge[0]), int(edge[1])))
+        
+        with open(args.output_path[:-8] + '_test_edges.pkl', 'wb') as f:
+            pickle.dump(test_edges, f)
+
     # https://networkx.org/documentation/stable/reference/readwrite/gpickle.html
     nx.write_gpickle(G, args.output_path)
 
@@ -65,6 +77,8 @@ if __name__ == "__main__":
         help='path to csv-file of node-ids', action='store')
     parser.add_argument('--edges_path', type=str, 
         help='path to csv-file of edges', action='store')
+    parser.add_argument('-l', '--linkprediction', dest='lp', 
+        help='add this flag if you want to use the graph for link prediction', action='store_true')
 
     args = parser.parse_args()
     main(args)

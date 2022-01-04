@@ -38,9 +38,9 @@ def deepwalk_approx(eigen_vals, D_inv_sqrt_U, w, vol_G, b):
     # Spectrum filter - the sum of the powers of the eigen values
     filter = eigenval_filter(eigen_vals, w)
     # take sqrt so that we can take dot prod of term and its transpose..
-    D_inv_sqrt_U = sparse.csr_matrix(D_inv_sqrt_U)
-    M_sqrt = sparse.csr_matrix(filter.dot(D_inv_sqrt_U.T).T)
-    M = sparse.csr_matrix(M_sqrt.dot(M_sqrt.T) * vol_G/b)
+    D_inv_sqrt_U = D_inv_sqrt_U
+    M_sqrt = filter.dot(D_inv_sqrt_U.T).T
+    M = M_sqrt.dot(M_sqrt.T) * vol_G/b
     print('M shape (before max): ', M.shape)
     M_prime_log = np.log(np.maximum(M, 1))
     return M_prime_log
