@@ -7,8 +7,9 @@ import argparse
 import random
 import pickle
 
+
 def load_graph(nodes, edges, link_prediction):
-    G = nx.Graph()
+    G = nx.MultiGraph()
 
     # add the nodes
     V = add_nodes(G, nodes)
@@ -23,6 +24,7 @@ def load_graph(nodes, edges, link_prediction):
 
     return G, test_edges
 
+
 def add_nodes(G, nodes):
     V = []
     with open(nodes, 'r') as csvfile:
@@ -31,6 +33,7 @@ def add_nodes(G, nodes):
             V.append(int(node[0]))
             G.add_node(int(node[0]))
     return V
+
 
 def add_edges(G, edges, link_prediction):
     E = []

@@ -17,3 +17,9 @@ python3 graph.py ./data/Twitter-dataset/data/nodes.csv ./data/Twitter-dataset/da
 
 # load Epinion dataset and pickle the constructed networkx graph
 python3 load_epinion.py ./data/Epinions-dataset/soc-Epinions1.txt ./data/Epinions-dataset/epinions_graph_lp.gpickle
+
+# load Cora dataset and pickle the constructed networkx graph
+python3 directed_graph.py ./data/Cora-dataset/cora_graph_dir.gpickle cora 
+
+# load PubMed dataset and pickle the constructed networkx graph
+python3 directed_graph.py ./data/Pubmed-Diabetes/pubmed_graph_undir.gpickle pubmed 
