@@ -73,7 +73,7 @@ def load_data(prefix, normalize=True, load_walks=False):
 def main():
     prefix = "./data/reddit/reddit"
     G, feats, id_map, walks, class_map = load_data(prefix, load_walks=True)
-    nx.write_gpickle(G, "./data/Reddit-dataset/reddit_graph.gpickle")
+    nx.write_gpickle(G, "../data/Reddit-dataset/reddit_graph.gpickle")
     print(nx.info(G))
 
 
