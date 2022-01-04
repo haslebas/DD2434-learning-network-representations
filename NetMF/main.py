@@ -1,5 +1,6 @@
+# Referenced implementations: 
 # Implementation provided by authors: https://github.com/xptree/NetMF
-# Library implementation: https://karateclub.readthedocs.io/en/latest/modules/root.html#karateclub.node_embedding.neighbourhood.netmf.NetMF
+
 # Author: Filippa Kärrfelt
 
 import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
@@ -8,6 +9,7 @@ import random
 import argparse
 import scipy.sparse as sparse
 import scipy.sparse.linalg as linalg
+import pickle
 
 def svd(M, d):
     print('SVD for result...')
@@ -16,18 +18,28 @@ def svd(M, d):
     return sparse.diags(np.sqrt(S)).dot(U.T).T
 
 def eigenval_filter(eigen_vals, w):
-    # This should be the sum of the powers of each of the eigen values!
-    filter_sum = 0
-    for i in range(w-1):
-        pow = eigen_vals ** (w+1)
-        filter_sum += pow
-    return filter_sum * 1/w
+    # Sum of the powers of the eigen values
+    ev = sparse.diags(eigen_vals)
+    S = np.zeros(ev.shape)
+    P_power = sparse.identity(ev.shape[0])
+    for i in range(w):
+        # Compute power for each window size
+        P_power = P_power.dot(ev)
+        S += P_power
+    # S = S * vol_G / (b * w)
+    # filter_sum = 0
+    # for i in range(w-1):
+        # pow = eigen_vals ** (w+1)
+        # filter_sum += pow
+    # return filter_sum * 1/w
+    return S * 1/w
 
-def deepwalk_approx(eigen_vals, eigen_vecs, D_inv_sqrt_U, D_inv_sqrt, w, vol_G, b):
+def deepwalk_approx(eigen_vals, D_inv_sqrt_U, w, vol_G, b):
     print('Computing M...')
     # Spectrum filter - the sum of the powers of the eigen values
     filter = eigenval_filter(eigen_vals, w)
-    M_sqrt = sparse.diags(np.sqrt(filter)).dot(D_inv_sqrt_U.T).T
+    # take sqrt so that we can take dot prod of term and its transpose..
+    M_sqrt = np.sqrt(filter).dot(D_inv_sqrt_U.T).T
     M = np.dot(M_sqrt, M_sqrt.T) * vol_G/b
     print('M shape (before max): ', M.shape)
     M_prime_log = np.log(np.maximum(M, 1))
@@ -39,26 +51,26 @@ def get_laplacian(A, n_nodes):
     # L: Laplacian matrix (D-A) where D is the degree matrix and A the adjacency matrix
     # diag: Array of square roots of the vertext degrees sqrt(D)
     L, D_sqrt = sparse.csgraph.laplacian(A, normed=True, return_diag=True)
-    # eig_approx = D^{-1/2} A D^{-1/2} approximated by I - L
-    eig_approx = sparse.identity(n_nodes) - L
-    return eig_approx, D_sqrt
+    # D^{-1/2} A D^{-1/2} calculated by I - L
+    D_A_D = sparse.identity(n_nodes) - L
+    return D_A_D, D_sqrt
 
 def eigen_decomposition_approx(A, r):
     n_nodes = A.shape[0]
-    eig_approx, D_sqrt = get_laplacian(A, n_nodes)
+    D_A_D, D_sqrt = get_laplacian(A, n_nodes)
     print('Eigen decomposition...')
     # https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.eigsh.html
-    eigen_vals, eigen_vecs = linalg.eigsh(eig_approx, r, which="LA", tol=1e-3, maxiter=300)
+    eigen_vals, eigen_vecs = linalg.eigsh(D_A_D, r, which="LA", tol=1e-3, maxiter=300)
     D_inv_sqrt = sparse.diags(D_sqrt ** -1)
     D_inv_sqrt_U = D_inv_sqrt.dot(eigen_vecs)
-    return eigen_vals, eigen_vecs, D_inv_sqrt_U, D_inv_sqrt
+    return eigen_vals, D_inv_sqrt_U
 
 def net_mf_approx(A, r, w, b, d):
     # eigen decomposition approximation
-    eigen_vals, eigen_vecs, D_inv_sqrt_U, D_inv_sqrt = eigen_decomposition_approx(A, r)
+    eigen_vals, D_inv_sqrt_U = eigen_decomposition_approx(A, r)
     # approximate M
     vol_G = float(A.sum())
-    M = deepwalk_approx(eigen_vals, eigen_vecs, D_inv_sqrt_U, D_inv_sqrt, w, vol_G, b)
+    M = deepwalk_approx(eigen_vals, D_inv_sqrt_U, w, vol_G, b)
     # rank-d approximation by SVD
     embedding = svd(M, d)
     return embedding
@@ -66,14 +78,14 @@ def net_mf_approx(A, r, w, b, d):
 def net_mf_exact(A, r, w, b, d):
     n_nodes = A.shape[0]
     vol_G = float(A.sum())
-    eig_approx, diag = get_laplacian(A, n_nodes)
+    D_A_D, diag = get_laplacian(A, n_nodes)
     print('Computing matrix powers...')
     # S is the sum of the powers
-    S = np.zeros(eig_approx.shape)
+    S = np.zeros(D_A_D.shape)
     P_power = sparse.identity(n_nodes)
     for i in range(w):
         # Compute power for each window size
-        P_power = P_power.dot(eig_approx)
+        P_power = P_power.dot(D_A_D)
         S += P_power
     S = S * vol_G / (b * w)
     invU = sparse.diags(diag ** -1)
@@ -97,8 +109,14 @@ def main(args):
         print('Running matrix factorization for small window size')
         netmf_embedding = net_mf_exact(A, args.r, args.w, args.b, args.d)
 
-    np.save(args.output_path, netmf_embedding)
-    print('Saved NetMF embeddings to file')
+    # np.save(args.output_path, netmf_embedding)
+    # make embedding a dict:
+    E = {}
+    for idx in range(netmf_embedding.shape[0]):
+        E[idx+1] = netmf_embedding[idx]
+    with open(args.output_path, 'wb') as handle:
+        pickle.dump(E, handle)
+    print('Saved NetMF embeddings to pkl file')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='learn network representations with Line')
