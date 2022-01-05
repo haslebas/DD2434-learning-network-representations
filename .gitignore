@@ -2,7 +2,8 @@
 # Manually added
 ##########################################
 
-# All datasets
+# All datasets & embeddings
+embeddings/
 data/
 
 # Mac files
