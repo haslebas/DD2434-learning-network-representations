@@ -10,66 +10,55 @@ from stellargraph.data import EdgeSplitter
 import pandas as pd
 
 
-def load_graph(nodes, edges):
+def load_graph(edges):
     G = nx.MultiDiGraph()
 
     # add the nodes
-    add_nodes(G, nodes)
-    add_edges(G, edges)
+    add_graph_data(G, edges)
     return G
 
-def add_nodes(G, nodes):
-    with open(nodes, 'r') as csvfile:
-        datareader = csv.reader(csvfile)
-        for node in datareader:
-            G.add_node(int(node[0]))
-
-def add_edges(G, edges):
+def add_graph_data(G, edges):
     with open(edges, 'r') as csvfile:
         datareader = csv.reader(csvfile)
+        it = 0
         for edge in datareader:
-            G.add_edge(int(edge[0]), int(edge[1]))
+            if (it > 1):
+                e = edge[0].split()
+                G.add_node(int(e[0]))
+                G.add_node(int(e[1]))
+                G.add_edge(int(e[0]), int(e[1]))
+            it += 1
 
-def save_labels_as_csv(labels, path):
+
+def save_labels_as_csv(labels_path, out_path):
     node_classes = {}
     node_labels = []
     class_num = 0
-    for node, label in labels.items():
-        if label in node_classes:
-            node_labels.append([node, node_classes[label]])
-        else:
-            node_classes[label] = class_num
-            class_num += 1
-            node_labels.append([node, node_classes[label]])
+    with open(labels_path, 'r') as csvfile:
+        datareader = csv.reader(csvfile)
+        it = 1
+        for row in datareader:
+            node = it
+            label = row[0].strip()
+            if label in node_classes:
+                node_labels.append([node, node_classes[label]])
+            else:
+                node_classes[label] = class_num
+                class_num += 1
+                node_labels.append([node, node_classes[label]])
+            it += 1
+
     # write the labels to file
     df = pd.DataFrame(node_labels)
-    df.to_csv(path + 'group-edges.csv', header=None, index=False)
+    df.to_csv(out_path + 'group-edges.csv', header=None, index=False)
     classes_list = list(node_classes.items())
     df_c = pd.DataFrame(classes_list)
-    df_c.to_csv(path + 'groups.csv', header=None, index=False)
-
-def load_stellar_graph(dataset_name):
-    if dataset_name == 'cora':
-        dataset = sg.datasets.Cora()
-        G, labels = dataset.load(directed=True)
-        save_labels_as_csv(labels, args.labels_output_path)
-    elif dataset_name == "pubmed":
-        dataset = sg.datasets.PubMedDiabetes()
-        G, labels = dataset.load()
-        save_labels_as_csv(labels, args.labels_output_path)
-    # transform stellargraph to networkx graph representation
-    G_nx = G.to_networkx()
-    print('G nx: ', G_nx)
-    return G_nx
+    df_c.to_csv(out_path + 'groups.csv', header=None, index=False)
 
 def main(args):
-    if args.from_file:
-        print('Loading graph from local csv files.')
-        G = load_graph(args.nodes_path, args.edges_path)
-    else: 
-        print('Loading graph from StellarGraph datasets.')
-        G = load_stellar_graph(args.dataset_name)
-    
+    G = load_graph(args.edges_path)
+    save_labels_as_csv(args.classes_path, args.labels_output_path)
+   
     if args.lp:
         s = EdgeSplitter(G)
         G, E, _ = s.train_test_split(keep_connected=False, seed=args.seed)
@@ -89,15 +78,11 @@ if __name__ == "__main__":
     # command-line arguments
     parser.add_argument('output_path', type=str, 
         help='path to store the networkx pickle', action='store')
-    parser.add_argument('dataset_name', type=str, 
-        help='name of the dataset', action='store')
     parser.add_argument('labels_output_path', type=str, 
         help='path to store the label files', action='store')
-    parser.add_argument("-f", "--file", dest='from_file',
-        help='True if loading graph from csv file', action="store_true")
-    parser.add_argument('--nodes_path', type=str, 
-        help='path to csv-file of node-ids', action='store')
-    parser.add_argument('--edges_path', type=str, 
+    parser.add_argument('edges_path', type=str, 
+        help='path to csv-file of edges', action='store')
+    parser.add_argument('classes_path', type=str, 
         help='path to csv-file of edges', action='store')
     parser.add_argument('-l', '--linkprediction', dest='lp', 
         help='add this flag if you want to use the graph for link prediction', action='store_true')
