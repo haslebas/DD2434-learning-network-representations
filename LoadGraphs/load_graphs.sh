@@ -28,4 +28,9 @@ python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir_lp.gpickle p
 # load big Cora dataset and pickle the constructed networkx graph
 mkdir ../data/subelj_cora/data/
 python3 load_cora_big.py ../data/subelj_cora/cora_big_graph_dir.gpickle ../data/subelj_cora/data/ ../data/subelj_cora/out.subelj_cora_cora ../data/subelj_cora/ent.subelj_cora_cora.class.name
-python3 load_cora_big.py ../data/subelj_cora/cora_big_graph_dir.gpickle ../data/subelj_cora/data/ ../data/subelj_cora/out.subelj_cora_cora ../data/subelj_cora/ent.subelj_cora_cora.class.name -l
+python3 load_cora_big.py ../data/subelj_cora/cora_big_graph_dir_lp.gpickle ../data/subelj_cora/data/ ../data/subelj_cora/out.subelj_cora_cora ../data/subelj_cora/ent.subelj_cora_cora.class.name -l
+
+# load directed PubMed dataset and pickle the constructed networkx graph
+mkdir ../data/PubMed/data/
+python3 load_directed_pubmed.py ../data/PubMed/pubmed_graph_dir.gpickle ../data/PubMed/data/ ../data/PubMed/edges.csv ../data/PubMed/group-edges.csv
+python3 load_directed_pubmed.py ../data/PubMed/pubmed_graph_dir_lp.gpickle ../data/PubMed/data/ ../data/PubMed/edges.csv ../data/PubMed/group-edges.csv -l

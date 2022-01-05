@@ -43,6 +43,6 @@ unzip -d data data/paper_linking_pairs.zip
 wget -P ./data http://konect.cc/files/download.tsv.subelj_cora.tar.bz2 
 tar -xf ./data/download.tsv.subelj_cora.tar.bz2 -C ./data/
 
-# Pubmed: we get it using the stellargraph API
-# wget -P ./data https://linqs-data.soe.ucsc.edu/public/Pubmed-Diabetes.tgz
-# tar -xf ./data/Pubmed-Diabetes.tgz -C ./data/
+# Pubmed: Directed dataset
+wget -P http://zhang18f.myweb.cs.uwindsor.ca/datasets/PubMed.tar.gz
+gunzip ./data/PubMed.tar.gz
