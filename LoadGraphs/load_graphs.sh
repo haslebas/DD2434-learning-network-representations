@@ -11,10 +11,12 @@ python3 graph.py ../data/Flickr-dataset/data/nodes.csv ../data/Flickr-dataset/da
 python3 graph.py ../data/Flickr-dataset/data/nodes.csv ../data/Flickr-dataset/data/edges.csv ../data/Flickr-dataset/flickr_graph_lp.gpickle -l
 
 # load Twitter dataset and pickle the constructed networkx graph
-python3 graph.py ../data/Twitter-dataset/data/nodes.csv ../data/Twitter-dataset/data/edges.csv ../data/Twitter-dataset/twitter_graph_lp.gpickle -l
+#python3 graph.py ../data/Twitter-dataset/data/nodes.csv ../data/Twitter-dataset/data/edges.csv ../data/Twitter-dataset/twitter_graph_lp.gpickle -l
+python3 load_graph_from_edges.py --separator=" " --excl_char="%" ../data/Twitter-dataset/data/out.munmun_twitter_social ../data/Twitter-dataset/twitter_graph_dir_lp.gpickle
 
 # load Epinion dataset and pickle the constructed networkx graph
-python3 load_epinion.py ../data/Epinions-dataset/soc-Epinions1.txt ../data/Epinions-dataset/epinions_graph_dir_lp.gpickle
+#python3 load_epinion.py ../data/Epinions-dataset/soc-Epinions1.txt ../data/Epinions-dataset/epinions_graph_dir_lp.gpickle
+python3 load_graph_from_edges.py --separator=$'\t' --excl_char="#" ../data/Epinions-dataset/soc-Epinions1.txt ../data/Epinions-dataset/epinions_graph_dir_lp.gpickle
 
 # load Cora dataset and pickle the constructed networkx graph
 python3 directed_graph.py ../data/Cora-dataset/cora_graph_dir.gpickle cora ../data/Cora-dataset/data/
