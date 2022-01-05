@@ -10,7 +10,7 @@ python3 node_classification.py ../embeddings/blog_catalog_line_128d_e50.pkl ../d
 python3 node_classification.py ../embeddings/blogcat_netmf_approx_embedding_128d.pkl ../data/BlogCatalog-dataset/data/group-edges.csv
 
 # DeepWalk BlogCatalog embeddings
-python3 node_classification.py ../data/BlogCatalog-dataset/blog_catalog_deepwalk_128d.pkl ../data/BlogCatalog-dataset/data/group-edges.csv
+python3 node_classification.py ../embeddings/blog_catalog_deepwalk_128d.pkl ../data/BlogCatalog-dataset/data/group-edges.csv --dataset_name BlogCatalog
 
 # DeepWalk Cora embeddings
-python3 node_classification.py ../data/Cora-dataset/cora_deepwalk_128d.pkl ../data/Cora-dataset/data/group-edges.csv
+python3 node_classification.py ../embeddings/cora_deepwalk_128d.pkl ../data/Cora-dataset/data/group-edges.csv --dataset_name Cora

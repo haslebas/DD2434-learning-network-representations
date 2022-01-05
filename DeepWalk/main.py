@@ -75,11 +75,11 @@ if __name__ == "__main__":
     parser.add_argument('-d', dest='d', type=int, 
         help='embedding length', action='store', default=128)
     parser.add_argument('-n_walks', dest='n_walks', type=int, 
-        help='number of walks for each node', action='store', default=1)
+        help='number of walks for each node', action='store', default=30)
     parser.add_argument('-t', dest='t', type=int, 
-        help='random walk length', action='store', default=10)
+        help='random walk length', action='store', default=40)
     parser.add_argument('-w', dest='w', type=int, 
-        help='skip-gram window size', action='store', default=5)
+        help='skip-gram window size', action='store', default=10)
 
     args = parser.parse_args()
     random.seed(args.seed)
