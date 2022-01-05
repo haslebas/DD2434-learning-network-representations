@@ -7,8 +7,8 @@ import argparse
 import stellargraph as sg
 import pickle
 from stellargraph.data import EdgeSplitter
-# from stellargraph import StellarGraph
-# from stellargraph import datasets
+import pandas as pd
+
 
 def load_graph(nodes, edges):
     G = nx.MultiDiGraph()
@@ -100,6 +100,8 @@ if __name__ == "__main__":
         help='path to csv-file of edges', action='store')
     parser.add_argument('-l', '--linkprediction', dest='lp', 
         help='add this flag if you want to use the graph for link prediction', action='store_true')
+    parser.add_argument('--seed', dest='seed', type=int, 
+        help='fix random seeds', action='store', default=1)
 
     args = parser.parse_args()
     main(args)

@@ -17,9 +17,9 @@ python3 graph.py ../data/Twitter-dataset/data/nodes.csv ../data/Twitter-dataset/
 python3 load_epinion.py ../data/Epinions-dataset/soc-Epinions1.txt ../data/Epinions-dataset/epinions_graph_dir_lp.gpickle
 
 # load Cora dataset and pickle the constructed networkx graph
-python3 directed_graph.py ../data/Cora-dataset/cora_graph_dir.gpickle cora 
-python3 directed_graph.py ../data/Cora-dataset/cora_graph_dir_lp.gpickle cora -l
+python3 directed_graph.py ../data/Cora-dataset/cora_graph_dir.gpickle cora ../data/Cora-dataset/data/
+python3 directed_graph.py ../data/Cora-dataset/cora_graph_dir_lp.gpickle cora -l ../data/Cora-dataset/data/
 
 # load PubMed dataset and pickle the constructed networkx graph
-python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir.gpickle pubmed 
-python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir_lp.gpickle pubmed -l
+python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir.gpickle pubmed ../data/Pubmed-dataset/data/
+python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir_lp.gpickle pubmed -l ../data/Pubmed-dataset/data/

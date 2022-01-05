@@ -40,6 +40,7 @@ def main(args):
     micro_scores = cross_val_score(model, X, y, cv=5, scoring='f1_micro')
     macro_scores = cross_val_score(model, X, y, cv=5, scoring='f1_macro')
     
+    print('Dataset: ', args.dataset_name)
     print('Micro scores are:')
     print(micro_scores)
     print('Macro scores are:')
@@ -55,6 +56,8 @@ if __name__ == "__main__":
         help='path to csv-file containing node labels', action='store')
     parser.add_argument('--seed', dest='seed', type=int, 
         help='fix random seeds', action='store', default=1)
+    parser.add_argument('--dataset_name', dest='dataset_name', type=str, 
+        help='fix random seeds', action='store')
 
     args = parser.parse_args()
     random.seed(args.seed)
