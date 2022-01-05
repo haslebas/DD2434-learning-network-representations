@@ -12,7 +12,7 @@ Knowledge Discovery and Data Mining (KDD), 2016
 import argparse
 import numpy as np
 import networkx as nx
-import node2vec
+import node2vecref
 from gensim.models import Word2Vec
 
 
@@ -23,10 +23,10 @@ def parse_args():
 
 	parser = argparse.ArgumentParser(description="Run node2vec.")
 
-	parser.add_argument('--input', nargs='?', default='graph/karate.edgelist',
+	parser.add_argument('--input', nargs='?', default='../graph/karate.edgelist',
 						help='Input graph path')
 
-	parser.add_argument('--output', nargs='?', default='emb/karate.emb',
+	parser.add_argument('--output', nargs='?', default='../emb/karate.emb',
 						help='Embeddings path')
 
 	parser.add_argument('--dimensions', type=int, default=128,
