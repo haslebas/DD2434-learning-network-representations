@@ -97,7 +97,7 @@ def main(args):
 	Pipeline for representational learning for all nodes in a graph.
 	"""
 	nx_G = read_graph()
-	G = node2vec.Graph(nx_G, args.directed, args.p, args.q)
+	G = node2vecref.Graph(nx_G, args.directed, args.p, args.q)
 	G.preprocess_transition_probs()
 	walks = G.simulate_walks(args.num_walks, args.walk_length)
 	learn_embeddings(walks)

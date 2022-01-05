@@ -20,6 +20,11 @@ class Graph:
 
 		walk = [start_node]
 
+		print("\n\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+		print(walk)
+		print(len(walk))
+		print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+
 		while len(walk) < walk_length:
 			cur = walk[-1]
 			cur_nbrs = sorted(G.neighbors(cur))
