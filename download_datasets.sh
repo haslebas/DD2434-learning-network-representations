@@ -24,8 +24,12 @@ wget -P ./data http://snap.stanford.edu/graphsage/reddit.zip
 unzip -d data data/reddit.zip
 
 # Twitter (larger than the original dataset)
-wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
-unzip -d data data/Twitter-dataset.zip
+#wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
+#unzip -d data data/Twitter-dataset.zip
+
+# Twitter
+wget -P ./data http://konect.cc/files/download.tsv.munmun_twitter_social.tar.bz2
+tar -xf data/download.tsv.munmun_twitter_social.tar.bz2 -C ./data --strip-components 1
 
 # Epinion
 wget -P ./data https://snap.stanford.edu/data/soc-Epinions1.txt.gz
