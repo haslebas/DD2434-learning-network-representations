@@ -16,7 +16,7 @@ python3 load_graph_from_edges.py --separator=" " --excl_char="%" ../data/Twitter
 
 # load Epinion dataset and pickle the constructed networkx graph
 # python3 load_epinion.py ../data/Epinions-dataset/soc-Epinions1.txt ../data/Epinions-dataset/epinions_graph_dir_lp.gpickle
-python3 load_graph_from_edges.py --separator=$'\t' --excl_char="#" ../data/Epinions-dataset/soc-Epinions1.txt ../data/Epinions-dataset/epinions_graph_dir_lp.gpickle
+python3 load_graph_from_edges.py --separator=$'\t' --excl_char="#" ../data/Epinions-dataset/soc-Epinions1.txt ../data/Epinions-dataset/epinions_graph_dir_lp.gpickle -d
 
 # load big Cora dataset and pickle the constructed networkx graph
 mkdir ../data/subelj_cora/data/
@@ -34,6 +34,9 @@ python3 load_from_json.py ../data/reddit/reddit-G.json ../data/reddit/reddit-cla
 
 # load PPI dataset and pickle the constructed networkx graph
 python3 load_graph_from_edges.py ../data/PPI-dataset/PP-Pathways_ppi.csv ../data/PPI-dataset/ppi_graph_lp.gpickle --separator=',' --excl_char="#"
+
+# load AstroPh dataset and pickle the constructed networkx graph
+python3 load_graph_from_edges.py ../data/AstroPh-dataset/ca-AstroPh.txt ../data/AstroPh-dataset/astro_graph_lp.gpickle --separator=$'\t' --excl_char="#"
 
 # load Cora dataset and pickle the constructed networkx graph
 # python3 directed_graph.py ../data/Cora-dataset/cora_graph_dir.gpickle cora ../data/Cora-dataset/data/

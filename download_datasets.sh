@@ -49,6 +49,12 @@ gunzip ./data/PP-Pathways_ppi.csv.gz
 mkdir ./data/PPI-dataset
 mv ./data/PP-Pathways_ppi.csv ./data/PPI-dataset/PP-Pathways_ppi.csv
 
+# ASTRO-PH
+wget -P ./data https://snap.stanford.edu/data/ca-AstroPh.txt.gz
+gunzip ./data/ca-AstroPh.txt.gz
+mkdir ./data/AstroPh-dataset
+mv ./data/ca-AstroPh.txt ./data/AstroPh-dataset/ca-AstroPh.txt
+
 # Twitter (larger than the original dataset)
 # wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
 # unzip -d data data/Twitter-dataset.zip

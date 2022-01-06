@@ -7,8 +7,11 @@ import pickle
 from stellargraph.data import EdgeSplitter
 
 
-def load_graph(edges, exclude_char, separator):
-    G = nx.MultiDiGraph()
+def load_graph(edges, exclude_char, separator, directed):
+    if directed:
+        G = nx.MultiDiGraph()
+    else:
+        G = nx.MultiGraph()
     with open(edges, 'r') as csvfile:
         datareader = csv.reader(csvfile, delimiter=separator)
         for line in datareader:
@@ -20,7 +23,7 @@ def load_graph(edges, exclude_char, separator):
 
 def main(args):
     edges_path = args.edges_path
-    G = load_graph(edges_path, args.excl_char, args.separator)
+    G = load_graph(edges_path, args.excl_char, args.separator, args.directed)
 
     s = EdgeSplitter(G)
     G, E, _ = s.train_test_split(keep_connected=False, seed=args.seed)
@@ -48,6 +51,8 @@ if __name__ == '__main__':
                         help='separator in csv file', action='store')
     parser.add_argument('--excl_char', dest='excl_char', type=str,
                         help='lines to exclude in csv file that contain the exclude char', action='store')
+    parser.add_argument('-d', '--directed', dest='directed', 
+        help='add this flag if you want to use a directed graph', action='store_true')
 
     args = parser.parse_args()
     main(args)
