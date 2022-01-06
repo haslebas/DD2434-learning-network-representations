@@ -46,3 +46,10 @@ tar -xf ./data/download.tsv.subelj_cora.tar.bz2 -C ./data/
 # Pubmed: Directed dataset
 wget -P http://zhang18f.myweb.cs.uwindsor.ca/datasets/PubMed.tar.gz
 gunzip ./data/PubMed.tar.gz
+
+# Possible Additional dataset ARXIV from: https://ogb.stanford.edu/docs/nodeprop/#ogbn-arxiv
+# wget -P ./data/Arxiv-dataset https://snap.stanford.edu/ogb/data/misc/ogbn_arxiv/titleabs.tsv.gz
+# gunzip ./data/Arxiv-dataset/titleabs.tar.gz
+
+# other possible additional dataset: https://snap.stanford.edu/biodata/datasets/10000/10000-PP-Pathways.html
+# PPI?
