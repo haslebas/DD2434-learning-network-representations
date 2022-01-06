@@ -10,6 +10,7 @@ Knowledge Discovery and Data Mining (KDD), 2016
 """
 
 import argparse
+import pickle
 import numpy as np
 import networkx as nx
 import node2vecref
@@ -23,7 +24,10 @@ def parse_args():
 
 	parser = argparse.ArgumentParser(description="Run node2vec.")
 
-	parser.add_argument('--input', nargs='?', default='../graph/karate.edgelist',
+	#parser.add_argument('--input', nargs='?', default='../data/BlogCatalog-dataset/blog_catalog_graph.gpickle',
+#						help='Input graph path')
+
+	parser.add_argument('--input', nargs='?', default='./BlogCatalog.edgelist',
 						help='Input graph path')
 
 	parser.add_argument('--output', nargs='?', default='../emb/karate.emb',
@@ -48,10 +52,10 @@ def parse_args():
 						help='Number of parallel workers. Default is 8.')
 
 	parser.add_argument('--p', type=float, default=1,
-						help='Return hyperparameter. Default is 1.')
+						help='Return hyperparameter. Default is 0.25')
 
 	parser.add_argument('--q', type=float, default=1,
-						help='Inout hyperparameter. Default is 1.')
+						help='Inout hyperparameter. Default is 0.25')
 
 	parser.add_argument('--weighted', dest='weighted', action='store_true',
 						help='Boolean specifying (un)weighted. Default is unweighted.')
@@ -91,16 +95,46 @@ def learn_embeddings(walks):
 	model = Word2Vec(walks, vector_size=args.dimensions, window=args.window_size, min_count=0, sg=1, workers=args.workers, epochs=args.iter)
 	model.save(args.output)
 
+	return model
+
 
 def main(args):
 	"""
 	Pipeline for representational learning for all nodes in a graph.
 	"""
+	#nx_G = nx.read_gpickle(args.input)
 	nx_G = read_graph()
+	print("THE GRAPH:")
+	print(nx_G)
+	print("\n")
+
+	#pepe = nx.read_gpickle(args.input)
+	#nx_G = nx.write_weighted_edgelist(pepe, "./BlogCatalog.edgelist")
+
+	#print(pepe)
+	#print(nx_G)
+
 	G = node2vecref.Graph(nx_G, args.directed, args.p, args.q)
 	G.preprocess_transition_probs()
+	print("PRE-PROCESSING FINISHED!")
 	walks = G.simulate_walks(args.num_walks, args.walk_length)
-	learn_embeddings(walks)
+	w2v_embedding = learn_embeddings(walks)
+	print("\nMODEL TRAINED!")
+	w2v_embedding.wv.save_word2vec_format(args.output + '.txt')
+	# make embedding a dict:
+	E = {}
+	node_embeddings = open(args.output + '.txt', 'r')
+	nodes = node_embeddings.readlines()
+	num_nodes = nodes[0]
+	print('num nodes: ', num_nodes)
+	for node in nodes[1:]:
+		tok = node.split()
+		key = tok[0]
+		val = np.array(tok[1:], dtype=float)
+		E[key] = val
+	with open(args.output + '.pkl', 'wb') as handle:
+		pickle.dump(E, handle)
+	print('Saved Node2Vec embeddings to pkl file')
 
 
 if __name__ == "__main__":

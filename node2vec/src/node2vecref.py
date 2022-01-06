@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 import networkx as nx
 import random
@@ -19,12 +21,6 @@ class Graph:
 		alias_edges = self.alias_edges
 
 		walk = [start_node]
-
-		print("\n\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-		print(walk)
-		print(len(walk))
-		print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-
 		while len(walk) < walk_length:
 			cur = walk[-1]
 			cur_nbrs = sorted(G.neighbors(cur))
@@ -81,26 +77,39 @@ class Graph:
 		"""
 		Preprocessing of transition probabilities for guiding the random walks.
 		"""
+		print("entramos en las transition probs")
 		G = self.G
 		is_directed = self.is_directed
+		i = 0
+
+		print(len(G.nodes))
 
 		alias_nodes = {}
 		for node in G.nodes():
+			print(str(i), end='\r')
 			unnormalized_probs = [G[node][nbr]['weight'] for nbr in sorted(G.neighbors(node))]
 			norm_const = sum(unnormalized_probs)
 			normalized_probs = [float(u_prob) / norm_const for u_prob in unnormalized_probs]
 			alias_nodes[node] = alias_setup(normalized_probs)
+			i = i+1
 
 		alias_edges = {}
 		triads = {}
+		print("\n-")
+		j = 0
 
 		if is_directed:
 			for edge in G.edges():
+				print(str(j), end='\r')
 				alias_edges[edge] = self.get_alias_edge(edge[0], edge[1])
+				j = j + 1
+
 		else:
 			for edge in G.edges():
+				print(str(j), end='\r')
 				alias_edges[edge] = self.get_alias_edge(edge[0], edge[1])
 				alias_edges[(edge[1], edge[0])] = self.get_alias_edge(edge[1], edge[0])
+				j = j + 1
 
 		self.alias_nodes = alias_nodes
 		self.alias_edges = alias_edges
