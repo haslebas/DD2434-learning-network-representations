@@ -1,5 +1,6 @@
 # Code to load graph data as networkx graph and dump it as pickle file
-# Author: Filippa Kärrfelt 2021-12-20
+# Right now this file is used to load the Cora, DBLP-Au and DBLP-Ci datasets
+# Author: Filippa Kärrfelt 2022-01-06
 
 import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
 import csv
@@ -10,23 +11,36 @@ from stellargraph.data import EdgeSplitter
 import pandas as pd
 
 
-def load_graph(edges):
+def load_graph(edges, dataset):
     G = nx.MultiDiGraph()
 
     # add the nodes
-    add_graph_data(G, edges)
+    add_graph_data(G, edges, dataset)
+    print('Loaded graph with %d nodes and %d edges'%(len(G.nodes), len(G.edges))) 
     return G
 
-def add_graph_data(G, edges):
+def add_graph_data(G, edges, dataset):
     with open(edges, 'r') as csvfile:
         datareader = csv.reader(csvfile)
         it = 0
         for edge in datareader:
-            if (it > 1):
-                e = edge[0].split()
-                G.add_node(int(e[0]))
-                G.add_node(int(e[1]))
-                G.add_edge(int(e[0]), int(e[1]))
+            if dataset == 'DBLP-AU':
+                if (it > 3):
+                    e = edge[0].split()
+                    if len(e) == 2:
+                        G.add_node(int(e[0]))
+                        G.add_node(int(e[1]))
+                        G.add_edge(int(e[0]), int(e[1]))
+            else:
+                if (it > 1):
+                    if dataset == 'DBLP':
+                        e = edge
+                    else:
+                        e = edge[0].split()
+                    if len(e) == 2:
+                        G.add_node(int(e[0]))
+                        G.add_node(int(e[1]))
+                        G.add_edge(int(e[0]), int(e[1]))
             it += 1
 
 
@@ -56,8 +70,9 @@ def save_labels_as_csv(labels_path, out_path):
     df_c.to_csv(out_path + 'groups.csv', header=None, index=False)
 
 def main(args):
-    G = load_graph(args.edges_path)
-    save_labels_as_csv(args.classes_path, args.labels_output_path)
+    G = load_graph(args.edges_path, args.dataset)
+    if args.load_classes:
+        save_labels_as_csv(args.classes_path, args.labels_output_path)
    
     if args.lp:
         s = EdgeSplitter(G)
@@ -82,7 +97,11 @@ if __name__ == "__main__":
         help='path to store the label files', action='store')
     parser.add_argument('edges_path', type=str, 
         help='path to csv-file of edges', action='store')
-    parser.add_argument('classes_path', type=str, 
+    parser.add_argument('dataset', type=str, 
+        help='separator between nodes in graph edge txt file', action='store')
+    parser.add_argument('-c', '--classes', dest='load_classes', 
+        help='add this flag if class labels should be added', action='store_true')
+    parser.add_argument('--classes_path', type=str, 
         help='path to csv-file of edges', action='store')
     parser.add_argument('-l', '--linkprediction', dest='lp', 
         help='add this flag if you want to use the graph for link prediction', action='store_true')
