@@ -50,6 +50,8 @@ wget -P ./data http://statml.com/download/data_7z/misc/dblp-cite.7z
 # # DBLP-Au (Authoprship network) 3M/10M:
 wget -P ./data https://snap.stanford.edu/data/bigdata/communities/com-dblp.ungraph.txt.gz
 gunzip ./data/com-dblp.ungraph.txt.gz
+mkdir ./data/DBLP-Au-dataset
+mv ./data/com-dblp.ungraph.txt ./data/DBLP-Au-dataset/com-dblp.ungraph.txt
 
 # PPI (additional dataset)
 wget -P ./data https://snap.stanford.edu/biodata/datasets/10000/files/PP-Pathways_ppi.csv.gz

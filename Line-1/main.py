@@ -47,7 +47,7 @@ def line_first_order(G, timesteps, K, d, eps=0.1):
     E = {}
     for node in G.nodes:
         E[node] = np.random.rand(d) - 0.5
-    edges = [e for e in G.edges(keys=False)]
+    edges = [(e[0], e[1]) for e in G.edges]
     sampler = Sampler(G)
     
     # asynchronous SGD to learn embeddings
@@ -79,8 +79,6 @@ def line_first_order(G, timesteps, K, d, eps=0.1):
             count += 1
             if count >= N:
                 break
-
-        print('Completed epoch %d'%(e))
     return E
 
 def main(args):
