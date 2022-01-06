@@ -35,10 +35,6 @@ tar -xf data/download.tsv.munmun_twitter_social.tar.bz2 -C ./data --strip-compon
 wget -P ./data https://snap.stanford.edu/data/soc-Epinions1.txt.gz
 gunzip ./data/soc-Epinions1.txt.gz
 
-# DBLP (larger than the original dataset)
-wget -P ./data https://originalstatic.aminer.cn/misc/dblp.v13.7z
-7za e ./data/dblp.v13.7z -o./data
-
 # CoCit (also not original dataset)
 wget -P ./data https://academicgraphv2.blob.core.windows.net/oag/linkage/paper_linking_pairs.zip
 unzip -d data data/paper_linking_pairs.zip
@@ -50,3 +46,11 @@ tar -xf ./data/download.tsv.subelj_cora.tar.bz2 -C ./data/
 # Pubmed: Directed dataset
 wget -P ./data http://zhang18f.myweb.cs.uwindsor.ca/datasets/PubMed.tar.gz
 tar -xf ./data/PubMed.tar.gz -C ./data
+
+# DBLP-Ci (citation network) 13k/50k:
+wget -P ./data http://statml.com/download/data_7z/misc/dblp-cite.7z
+7za e ./data/dblp-cite.7z -o./data/DBLP-Ci-dataset
+
+# # DBLP-Au (Authoprship network) 3M/10M:
+wget -P ./data https://snap.stanford.edu/data/bigdata/communities/com-dblp.ungraph.txt.gz
+gunzip ./data/com-dblp.ungraph.txt.gz
