@@ -2,19 +2,18 @@ import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
 import argparse
 import pickle
 import json
+import csv
 from stellargraph.data import EdgeSplitter
 from networkx.readwrite import json_graph
 
 def main(args):
     G = json_graph.node_link_graph(json.load(open(args.edges_path)))
-
-    print(G)
     
     s = EdgeSplitter(G)
     G, E, _ = s.train_test_split(keep_connected=True, seed=args.seed)
     test_edges = []
     for edge in E:
-        test_edges.append((int(edge[0]), int(edge[1])))
+        test_edges.append((edge[0], edge[1]))
 
     print(test_edges[0])
     with open(args.output_path[:-8] + '_test_edges.pkl', 'wb') as f:
@@ -22,12 +21,21 @@ def main(args):
 
     nx.write_gpickle(G, args.output_path)
 
+    if not args.lp:
+        class_map = json.load(open(args.labels_path))
+        with open(args.labels_path[:-5] + '.csv', 'w') as file:
+            writer = csv.writer(file)
+            for key, value in class_map.items():
+                writer.writerow([key, value])
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='load data into networkx pickle')
 
     # command-line arguments
     parser.add_argument('edges_path', type=str,
         help='path to json file containing graph', action='store')
+    parser.add_argument('labels_path', type=str,
+        help='path to json file containing node labels', action='store')
     parser.add_argument('output_path', type=str,
         help='path to store the networkx pickle', action='store')
     parser.add_argument('--seed', dest='seed', type=int, 

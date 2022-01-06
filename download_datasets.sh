@@ -23,21 +23,17 @@ unzip -d data data/YouTube-dataset.zip
 wget -P ./data http://snap.stanford.edu/graphsage/reddit.zip
 unzip -d data data/reddit.zip
 
-# Twitter (larger than the original dataset)
-#wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
-#unzip -d data data/Twitter-dataset.zip
-
 # Twitter
 wget -P ./data http://konect.cc/files/download.tsv.munmun_twitter_social.tar.bz2
-tar -xf data/download.tsv.munmun_twitter_social.tar.bz2 -C ./data --strip-components 1
+mkdir ./data/Twitter-dataset
+mkdir ./data/Twitter-dataset/data
+tar -xf data/download.tsv.munmun_twitter_social.tar.bz2 -C ./data/Twitter-dataset/data --strip-components 1
 
 # Epinion
 wget -P ./data https://snap.stanford.edu/data/soc-Epinions1.txt.gz
 gunzip ./data/soc-Epinions1.txt.gz
-
-# CoCit (also not original dataset)
-wget -P ./data https://academicgraphv2.blob.core.windows.net/oag/linkage/paper_linking_pairs.zip
-unzip -d data data/paper_linking_pairs.zip
+mkdir ./data/Epinions-dataset
+mv ./data/soc-Epinions1.txt ./data/Epinions-dataset/soc-Epinions1.txt
 
 # Cora: Big directed graph version
 wget -P ./data http://konect.cc/files/download.tsv.subelj_cora.tar.bz2 
@@ -54,3 +50,27 @@ wget -P ./data http://statml.com/download/data_7z/misc/dblp-cite.7z
 # # DBLP-Au (Authoprship network) 3M/10M:
 wget -P ./data https://snap.stanford.edu/data/bigdata/communities/com-dblp.ungraph.txt.gz
 gunzip ./data/com-dblp.ungraph.txt.gz
+
+# PPI (additional dataset)
+wget -P ./data https://snap.stanford.edu/biodata/datasets/10000/files/PP-Pathways_ppi.csv.gz
+gunzip ./data/PP-Pathways_ppi.csv.gz
+mkdir ./data/PPI-dataset
+mv ./data/PP-Pathways_ppi.csv ./data/PPI-dataset/PP-Pathways_ppi.csv
+
+# ASTRO-PH
+wget -P ./data https://snap.stanford.edu/data/ca-AstroPh.txt.gz
+gunzip ./data/ca-AstroPh.txt.gz
+mkdir ./data/AstroPh-dataset
+mv ./data/ca-AstroPh.txt ./data/AstroPh-dataset/ca-AstroPh.txt
+
+# Twitter (larger than the original dataset)
+# wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
+# unzip -d data data/Twitter-dataset.zip
+
+# DBLP (larger than the original dataset)
+# wget -P ./data https://originalstatic.aminer.cn/misc/dblp.v13.7z
+# 7za e ./data/dblp.v13.7z -o./data
+
+# CoCit (also not original dataset)
+# wget -P ./data https://academicgraphv2.blob.core.windows.net/oag/linkage/paper_linking_pairs.zip
+# unzip -d data data/paper_linking_pairs.zip

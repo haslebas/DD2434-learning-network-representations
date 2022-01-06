@@ -37,10 +37,10 @@ def sig(x):
     """
     return (1 / (1 + np.exp(-x)))
 
-def line_first_order(G, epochs, K, d, eps=0.1):
+def line_first_order(G, timesteps, K, d, eps=0.1):
     """
     G: networkx graph
-    epochs: number of times each edge is considered
+    timesteps: number of optimisation steps relative to number of nodes
     K: number of negative edges for every positive edge
     d: dimensionality of embeddings
     """
@@ -51,9 +51,10 @@ def line_first_order(G, epochs, K, d, eps=0.1):
     sampler = Sampler(G)
     
     # asynchronous SGD to learn embeddings
-    for e in range(epochs):
+    count = 0
+    N = timesteps * len(G.nodes)
+    while(count < N):
         random.shuffle(edges)
-        t = 0
         for u, v in edges:
             neg_nbrs = sampler.draw(K)
 
@@ -73,11 +74,13 @@ def line_first_order(G, epochs, K, d, eps=0.1):
             else:
                 E[v] += eps * del_v    
 
-            if ((t + 1) % 10000 == 0):
-                print('Completed %d out of %d edges in epoch %d'%(t + 1, len(G.edges), e))  
-            t += 1  
+            if ((count + 1) % 10000 == 0):
+                print('Completed %d out of %d optimisation steps'%(count + 1, N))  
+            count += 1
+            if count >= N:
+                break
+
         print('Completed epoch %d'%(e))
-        print(E[1])
     return E
 
 def main(args):
@@ -86,7 +89,7 @@ def main(args):
     print('Loaded graph with %d nodes and %d edges'%(len(G.nodes), len(G.edges)))
     
     print('Start to learn Line-1 embeddings')
-    E = line_first_order(G, args.epochs, args.K, args.d)
+    E = line_first_order(G, args.timesteps, args.K, args.d)
 
     with open(args.output_path, 'wb') as handle:
         pickle.dump(E, handle)
@@ -101,8 +104,8 @@ if __name__ == "__main__":
         help='path to output file where represenations are stored', action='store')
     parser.add_argument('--seed', dest='seed', type=int, 
         help='fix random seeds', action='store', default=1)
-    parser.add_argument('-e', dest='epochs', type=int, 
-        help='number of epochs', action='store', default=1)
+    parser.add_argument('-T', dest='timesteps', type=int, 
+        help='number of optimisation steps relative to number of nodes', action='store', default=1)
     parser.add_argument('-K', dest='K', type=int, 
         help='number of negative samples for every edge', action='store', default=5)
     parser.add_argument('-d', dest='d', type=int, 
