@@ -10,11 +10,10 @@ from stellargraph.data import EdgeSplitter
 def load_graph(edges, exclude_char, separator):
     G = nx.MultiDiGraph()
     with open(edges, 'r') as csvfile:
-        datareader = csv.reader(csvfile)
+        datareader = csv.reader(csvfile, delimiter=separator)
         for line in datareader:
             if exclude_char not in line[0]:
-                node_pair = line[0].split(separator)
-                G.add_edge(int(node_pair[0]), int(node_pair[1]))
+                G.add_edge(int(line[0]), int(line[1]))
 
     return G
 
