@@ -1,14 +1,3 @@
-"""
-Reference implementation of node2vec.
-
-Author: Aditya Grover
-
-For more details, refer to the paper:
-node2vec: Scalable Feature Learning for Networks
-Aditya Grover and Jure Leskovec
-Knowledge Discovery and Data Mining (KDD), 2016
-"""
-
 import argparse
 import pickle
 import numpy as np
@@ -24,10 +13,7 @@ def parse_args():
 
 	parser = argparse.ArgumentParser(description="Run node2vec.")
 
-	#parser.add_argument('--input', nargs='?', default='../data/BlogCatalog-dataset/blog_catalog_graph.gpickle',
-#						help='Input graph path')
-
-	parser.add_argument('--input', nargs='?', default='./BlogCatalog.edgelist',
+	parser.add_argument('--input', nargs='?', default='./graph/BlogCatalog.edgelist',
 						help='Input graph path')
 
 	parser.add_argument('--output', nargs='?', default='../emb/karate.emb',
@@ -102,17 +88,10 @@ def main(args):
 	"""
 	Pipeline for representational learning for all nodes in a graph.
 	"""
-	#nx_G = nx.read_gpickle(args.input)
 	nx_G = read_graph()
 	print("THE GRAPH:")
 	print(nx_G)
 	print("\n")
-
-	#pepe = nx.read_gpickle(args.input)
-	#nx_G = nx.write_weighted_edgelist(pepe, "./BlogCatalog.edgelist")
-
-	#print(pepe)
-	#print(nx_G)
 
 	G = node2vecref.Graph(nx_G, args.directed, args.p, args.q)
 	G.preprocess_transition_probs()
