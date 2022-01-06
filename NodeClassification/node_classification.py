@@ -18,13 +18,14 @@ def main(args):
         emb = pickle.load(file)
 
     groups = {}
-    max_label = 0
     with open(args.labels_path, 'r') as file:
         datareader = csv.reader(file)
         for row in datareader:
-            key = int(row[0])
+            try:
+                key = int(row[0])
+            except ValueError:
+                pass
             val = int(row[1])
-            max_label = max(max_label, val)
             if key not in groups:
                 groups[key] = []
             groups[key].append(val)  
