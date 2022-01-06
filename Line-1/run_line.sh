@@ -18,9 +18,13 @@ python3 main.py ../data/Flickr-dataset/flickr_graph_lp.gpickle ../embeddings/fli
 # Twitter
 python3 main.py ../data/Twitter-dataset/twitter_graph_lp.gpickle ../embeddings/twitter_line_128d_T1_lp.pkl -T 1
 
-# Cora
+# big Cora
 python3 main.py ../data/subelj_cora/cora_graph_dir_lp.gpickle ../embeddings/cora_line_128d_T1_lp.pkl -T 1
 python3 main.py ../data/subelj_cora/cora_graph_dir.gpickle ../embeddings/cora_line_128d_T1.pkl -T 1
+
+# small Cora
+python3 main.py ../data/Cora-dataset/cora_graph_dir_lp.gpickle ../embeddings/small_cora_line_128d_T1_lp.pkl -T 1
+python3 main.py ../data/Cora-dataset/cora_graph_dir.gpickle ../embeddings/small_cora_line_128d_T1.pkl -T 1
 
 # AstroPh
 python3 main.py ../data/AstroPh-dataset/astro_graph_lp.gpickle ../embeddings/astro_line_128d_T1_lp.pkl -T 1
@@ -35,3 +39,11 @@ python3 main.py ../data/PubMed/pubmed_graph_dir.gpickle ../embeddings/pubmed_lin
 # Reddit
 python3 main.py ../data/reddit/reddit_graph_lp.gpickle ../embeddings/reddit_line_128d_T1_lp.pkl -T 1
 python3 main.py ../data/reddit/reddit_graph.gpickle ../embeddings/reddit_line_128d_T1.pkl -T 1
+
+# DBLP-Ci
+python3 main.py ../data/DBLP-Ci-dataset/dblp-ci_graph_dir_lp.gpickle ../embeddings/dblp-ci_line_128d_T1_lp.pkl -T 1
+python3 main.py ../data/DBLP-Ci-dataset/dblp-ci_graph_dir.gpickle ../embeddings/dblp-ci_line_128d_T1.pkl -T 1
+
+# DBLP-Au
+python3 main.py ../data/DBLP-Au-dataset/dblp-au_graph_dir_lp.gpickle ../embeddings/dblp-au_line_128d_T1_lp.pkl -T 1
+python3 main.py ../data/DBLP-Au-dataset/dblp-au_graph_dir.gpickle ../embeddings/dblp-au_line_128d_T1.pkl -T 1
