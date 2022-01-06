@@ -88,8 +88,8 @@ def net_mf_exact(A, r, w, b, d):
         P_power = P_power.dot(D_A_D)
         S += P_power
     S = S * vol_G / (b * w)
-    invU = sparse.diags(diag ** -1)
-    M = S.dot(invU)
+    invD = sparse.diags(diag ** -1)
+    M = invD.dot(invD.dot(S).T)
     M_prime = np.log(np.maximum(M, 1))
     # rank-d approximation by SVD
     embedding = svd(M_prime, d)

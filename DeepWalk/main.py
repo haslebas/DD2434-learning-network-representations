@@ -16,7 +16,8 @@ def deep_walk(G, w, d, n_walks, t):
     walks = []
     print('making random walks for %d nodes...'%(len(G.nodes)))
     for node in G.nodes:
-        print('current node: ', node)
+        if str(node).isnumeric() and int(node) % 1000 == 0:
+            print('current node: ', node)
         for i in range(n_walks):
             current_walk = []
             walk_node = node # set the initial walk node
