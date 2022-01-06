@@ -16,19 +16,20 @@ def deep_walk(G, w, d, n_walks, t):
     walks = []
     print('making random walks for %d nodes...'%(len(G.nodes)))
     for node in G.nodes:
+        print('current node: ', node)
         for i in range(n_walks):
             current_walk = []
-            walk_node = int(node) # set the initial walk node
+            walk_node = node # set the initial walk node
             current_walk.append(str(walk_node))
             for j in range(t):
                 neighbors = list(G.edges([walk_node])) # get the neighbors
                 if (len(neighbors) > 0): # only take a step if current node has out-edge!
                     picked_edge = random.choice(neighbors)
                     # picked edge is a tuple -- select the new node
-                    if int(picked_edge[0]) == walk_node:
-                        walk_node = int(picked_edge[1])
+                    if picked_edge[0] == walk_node:
+                        walk_node = picked_edge[1]
                     else:
-                        walk_node = int(picked_edge[0])
+                        walk_node = picked_edge[0]
                 current_walk.append(str(walk_node))
 
             walks.append(current_walk)

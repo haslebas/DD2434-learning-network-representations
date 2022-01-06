@@ -23,6 +23,7 @@ def main(args):
     
     y_true = [1] * (len(edges) // 2) + [0] * (len(edges) // 2)
     
+    print('Dataset: ', args.dataset_name)
     print('ROC-AUC score is:')
     print(roc_auc_score(y_true, y_pred))
 
@@ -34,6 +35,8 @@ if __name__ == "__main__":
         help='path to pickle-file containing embeddings', action='store')
     parser.add_argument('edges_path', type=str, 
         help='path to pickle-file containing test edges', action='store')
+    parser.add_argument('--dataset_name', type=str, 
+        help='path to pickle-file containing test edges', action='store', default='unknown')
     parser.add_argument('--seed', dest='seed', type=int, 
         help='fix random seeds', action='store', default=1)
 
