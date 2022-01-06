@@ -40,8 +40,8 @@ wget -P ./data http://konect.cc/files/download.tsv.subelj_cora.tar.bz2
 tar -xf ./data/download.tsv.subelj_cora.tar.bz2 -C ./data/
 
 # Pubmed: Directed dataset
-wget -P ./data http://zhang18f.myweb.cs.uwindsor.ca/datasets/PubMed.tar.gz
-tar -xf ./data/PubMed.tar.gz -C ./data
+wget -P http://zhang18f.myweb.cs.uwindsor.ca/datasets/PubMed.tar.gz
+gunzip ./data/PubMed.tar.gz
 
 # PPI (additional dataset)
 wget -P ./data https://snap.stanford.edu/biodata/datasets/10000/files/PP-Pathways_ppi.csv.gz

@@ -43,8 +43,10 @@ def main(args):
     print('Dataset: ', args.dataset_name)
     print('Micro scores are:')
     print(micro_scores)
+    print('avg: ', np.average(micro_scores))
     print('Macro scores are:')
     print(macro_scores)
+    print('avg: ', np.average(macro_scores))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='evaluate embeddings on node classification task')
