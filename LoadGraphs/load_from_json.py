@@ -7,7 +7,8 @@ from stellargraph.data import EdgeSplitter
 from networkx.readwrite import json_graph
 
 def main(args):
-    G = json_graph.node_link_graph(json.load(open(args.edges_path)), multigraph=True)
+    G_data = json.load(open(args.edges_path))
+    G = json_graph.node_link_graph(G_data, multigraph=True)
     
     s = EdgeSplitter(G)
     G, E, _ = s.train_test_split(keep_connected=True, seed=args.seed)

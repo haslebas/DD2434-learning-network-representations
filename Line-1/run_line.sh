@@ -19,8 +19,8 @@ python3 main.py ../data/Flickr-dataset/flickr_graph_lp.gpickle ../embeddings/fli
 python3 main.py ../data/Twitter-dataset/twitter_graph_lp.gpickle ../embeddings/twitter_line_128d_T1_lp.pkl -T 1
 
 # big Cora
-python3 main.py ../data/subelj_cora/cora_graph_dir_lp.gpickle ../embeddings/cora_line_128d_T1_lp.pkl -T 1
-python3 main.py ../data/subelj_cora/cora_graph_dir.gpickle ../embeddings/cora_line_128d_T1.pkl -T 1
+python3 main.py ../data/subelj_cora/cora_big_graph_dir_lp.gpickle ../embeddings/cora_line_128d_T1_lp.pkl -T 1
+python3 main.py ../data/subelj_cora/cora_big_graph_dir.gpickle ../embeddings/cora_line_128d_T1.pkl -T 1
 
 # small Cora
 python3 main.py ../data/Cora-dataset/cora_graph_dir_lp.gpickle ../embeddings/small_cora_line_128d_T1_lp.pkl -T 1

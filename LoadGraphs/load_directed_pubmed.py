@@ -14,33 +14,44 @@ def load_graph(edges):
     G = nx.MultiDiGraph()
 
     # add the nodes
-    add_graph_data(G, edges)
-    return G
+    V = add_graph_data(G, edges)
+    return G, V
 
 def add_graph_data(G, edges):
+    V = {}
+    count = 1
     with open(edges, 'r') as csvfile:
         datareader = csv.reader(csvfile)
         for e in datareader:
-                G.add_node(int(e[0]))
-                G.add_node(int(e[1]))
-                G.add_edge(int(e[0]), int(e[1]))
+            u = int(e[0])
+            v = int(e[1])
+            if u not in V:
+                V[u] = count
+                count += 1
+            if v not in V:
+                V[v] = count
+                count += 1
+            G.add_node(V[u])
+            G.add_node(V[v])
+            G.add_edge(V[u], V[v])
 
+    return V
 
-def save_labels_as_csv(labels_path, out_path):
+def save_labels_as_csv(labels_path, out_path, V):
     node_classes = {}
     node_labels = []
     class_num = 0
     with open(labels_path, 'r') as csvfile:
         datareader = csv.reader(csvfile)
         for row in datareader:
-            node = row[0]
+            node = int(row[0])
             label = row[1]
             if label in node_classes:
-                node_labels.append([node, node_classes[label]])
+                node_labels.append([V[node], node_classes[label]])
             else:
                 node_classes[label] = class_num
                 class_num += 1
-                node_labels.append([node, node_classes[label]])
+                node_labels.append([V[node], node_classes[label]])
 
     # write the labels to file
     df = pd.DataFrame(node_labels)
@@ -50,8 +61,8 @@ def save_labels_as_csv(labels_path, out_path):
     df_c.to_csv(out_path + 'groups.csv', header=None, index=False)
 
 def main(args):
-    G = load_graph(args.edges_path)
-    save_labels_as_csv(args.classes_path, args.labels_output_path)
+    G, V = load_graph(args.edges_path)
+    save_labels_as_csv(args.classes_path, args.labels_output_path, V)
    
     if args.lp:
         s = EdgeSplitter(G)

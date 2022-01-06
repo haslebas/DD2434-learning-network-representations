@@ -98,6 +98,7 @@ def net_mf_exact(A, r, w, b, d):
 def main(args):
     # https://networkx.org/documentation/stable/reference/readwrite/gpickle.html
     G = nx.read_gpickle(args.graph_path)
+    G = G.to_undirected()
     print('Loaded graph with %d nodes and %d edges'%(len(G.nodes), len(G.edges)))
     # Create adjacency matrix
     A = nx.linalg.graphmatrix.adjacency_matrix(G)
@@ -111,8 +112,10 @@ def main(args):
     # np.save(args.output_path, netmf_embedding)
     # make embedding a dict:
     E = {}
-    for idx in range(netmf_embedding.shape[0]):
-        E[idx+1] = netmf_embedding[idx]
+    id = 0
+    for n in G.nodes():
+        E[n] = netmf_embedding[id]
+        id += 1
     with open(args.output_path, 'wb') as handle:
         pickle.dump(E, handle)
     print('Saved NetMF embeddings to pkl file')
