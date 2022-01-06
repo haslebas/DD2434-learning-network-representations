@@ -43,6 +43,14 @@ tar -xf ./data/download.tsv.subelj_cora.tar.bz2 -C ./data/
 wget -P ./data http://zhang18f.myweb.cs.uwindsor.ca/datasets/PubMed.tar.gz
 tar -xf ./data/PubMed.tar.gz -C ./data
 
+# DBLP-Ci (citation network) 13k/50k:
+wget -P ./data http://statml.com/download/data_7z/misc/dblp-cite.7z
+7za e ./data/dblp-cite.7z -o./data/DBLP-Ci-dataset
+
+# # DBLP-Au (Authoprship network) 3M/10M:
+wget -P ./data https://snap.stanford.edu/data/bigdata/communities/com-dblp.ungraph.txt.gz
+gunzip ./data/com-dblp.ungraph.txt.gz
+
 # PPI (additional dataset)
 wget -P ./data https://snap.stanford.edu/biodata/datasets/10000/files/PP-Pathways_ppi.csv.gz
 gunzip ./data/PP-Pathways_ppi.csv.gz
