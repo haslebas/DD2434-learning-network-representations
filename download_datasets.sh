@@ -24,12 +24,12 @@ wget -P ./data http://snap.stanford.edu/graphsage/reddit.zip
 unzip -d data data/reddit.zip
 
 # Twitter (larger than the original dataset)
-# wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
-# unzip -d data data/Twitter-dataset.zip
+#wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
+#unzip -d data data/Twitter-dataset.zip
 
 # Twitter
 wget -P ./data http://konect.cc/files/download.tsv.munmun_twitter_social.tar.bz2
-tar -xf ./data/download.tsv.munmun_twitter_social.tar -C ./data/
+tar -xf data/download.tsv.munmun_twitter_social.tar.bz2 -C ./data --strip-components 1
 
 # Epinion
 wget -P ./data https://snap.stanford.edu/data/soc-Epinions1.txt.gz
@@ -43,10 +43,10 @@ gunzip ./data/soc-Epinions1.txt.gz
 wget -P ./data https://academicgraphv2.blob.core.windows.net/oag/linkage/paper_linking_pairs.zip
 unzip -d data data/paper_linking_pairs.zip
 
-# Cora: we get it using the stellargraph API
-# wget -P ./data http://konect.cc/files/download.tsv.subelj_cora.tar.bz2 
-# tar -xf ./data/download.tsv.subelj_cora.tar.bz2 -C ./data/
+# Cora: Big directed graph version
+wget -P ./data http://konect.cc/files/download.tsv.subelj_cora.tar.bz2 
+tar -xf ./data/download.tsv.subelj_cora.tar.bz2 -C ./data/
 
-# Pubmed: we get it using the stellargraph API
-# wget -P ./data https://linqs-data.soe.ucsc.edu/public/Pubmed-Diabetes.tgz
-# tar -xf ./data/Pubmed-Diabetes.tgz -C ./data/
+# Pubmed: Directed dataset
+wget -P ./data http://zhang18f.myweb.cs.uwindsor.ca/datasets/PubMed.tar.gz
+tar -xf ./data/PubMed.tar.gz -C ./data
