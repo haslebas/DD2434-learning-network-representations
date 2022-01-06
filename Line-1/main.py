@@ -77,7 +77,6 @@ def line_first_order(G, epochs, K, d, eps=0.1):
                 print('Completed %d out of %d edges in epoch %d'%(t + 1, len(G.edges), e))  
             t += 1  
         print('Completed epoch %d'%(e))
-        print(E[1])
     return E
 
 def main(args):

@@ -24,16 +24,20 @@ wget -P ./data http://snap.stanford.edu/graphsage/reddit.zip
 unzip -d data data/reddit.zip
 
 # Twitter (larger than the original dataset)
-wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
-unzip -d data data/Twitter-dataset.zip
+# wget -P ./data http://datasets.syr.edu/uploads/1296759055/Twitter-dataset.zip
+# unzip -d data data/Twitter-dataset.zip
+
+# Twitter
+wget -P ./data http://konect.cc/files/download.tsv.munmun_twitter_social.tar.bz2
+tar -xf ./data/download.tsv.munmun_twitter_social.tar -C ./data/
 
 # Epinion
 wget -P ./data https://snap.stanford.edu/data/soc-Epinions1.txt.gz
 gunzip ./data/soc-Epinions1.txt.gz
 
 # DBLP (larger than the original dataset)
-wget -P ./data https://originalstatic.aminer.cn/misc/dblp.v13.7z
-7za e ./data/dblp.v13.7z -o./data
+# wget -P ./data https://originalstatic.aminer.cn/misc/dblp.v13.7z
+# 7za e ./data/dblp.v13.7z -o./data
 
 # CoCit (also not original dataset)
 wget -P ./data https://academicgraphv2.blob.core.windows.net/oag/linkage/paper_linking_pairs.zip

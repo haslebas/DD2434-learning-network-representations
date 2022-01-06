@@ -17,3 +17,7 @@ python3 main.py ../data/Flickr-dataset/flickr_graph_lp.gpickle ../embeddings/fli
 
 # Line embeddings for Twitter
 python3 main.py ../data/Twitter-dataset/twitter_graph_lp.gpickle ../embeddings/twitter_line_128d_e50_lp.pkl -e 50
+
+# Line embeddings for Cora
+python3 main.py ../data/Cora-dataset/cora_graph_dir.gpickle ../embeddings/cora_line_128d_e5.pkl -e 5
+

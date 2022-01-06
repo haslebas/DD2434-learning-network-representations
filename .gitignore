@@ -3,6 +3,7 @@
 ##########################################
 
 # All datasets & embeddings
+embeddings_archive/
 embeddings/
 data/
 
