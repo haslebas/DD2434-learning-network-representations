@@ -21,6 +21,7 @@ def main(args):
     with open(args.labels_path, 'r') as file:
         datareader = csv.reader(file)
         for row in datareader:
+            key = row[0]
             try:
                 key = int(row[0])
             except ValueError:
@@ -29,9 +30,13 @@ def main(args):
             if key not in groups:
                 groups[key] = []
             groups[key].append(val)  
-
-    X = [emb[node] for node in sorted(groups.keys())]
-    list_y = [value for _, value in sorted(groups.items())]
+    
+    X = []
+    list_y = []
+    for node in sorted(groups.keys()):
+        if node in emb:
+            X.append(emb[node])
+            list_y.append(groups[node])
     data = list(zip(X, list_y))
     random.shuffle(data)
     X, list_y = zip(*data)
