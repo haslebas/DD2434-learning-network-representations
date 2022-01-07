@@ -55,7 +55,7 @@ def main(args):
     print('num nodes: ', num_nodes)
     for node in nodes[1:]:
         tok = node.split()
-        key = int(tok[0])
+        key = tok[0]
         val = np.array(tok[1:], dtype=float)
         E[key] = val
 
