@@ -1,10 +1,9 @@
 # Author: Luca Marini
+
 import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
 import csv
 import argparse
 import pickle
-
-import numpy as np
 from stellargraph.data import EdgeSplitter
 import pandas as pd
 
@@ -54,9 +53,7 @@ def load_graph(edges, exclude_char, separator, directed):
         datareader = csv.reader(csvfile, delimiter=separator)
         for line in datareader:
             if exclude_char not in line[0]:
-
                 G.add_edge(int(line[0]), int(line[1]))
-
     return G
 
 
