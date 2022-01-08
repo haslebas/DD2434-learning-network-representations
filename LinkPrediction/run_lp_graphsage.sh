@@ -13,7 +13,7 @@ python3 link_prediction.py ../embeddings/reddit_graphsage_lp.pkl ../data/reddit/
 python3 link_prediction.py ../embeddings/dblp_au_graphsage_lp.pkl ../data/DBLP-Au-dataset/dblp-au_graph_lp_test_edges.pkl --dataset_name DBLP-Au
 
 # LP Line on Flickr
-python3 link_prediction.py ../embeddings/flickr_graphsage_lp.pkl ../data/DBLP-Au-dataset/dblp-au_graph_lp_test_edges.pkl --dataset_name Flickr
+python3 link_prediction.py ../embeddings/flickr_graphsage_lp.pkl ../data/Flickr-dataset/flickr_graph_lp_test_edges.pkl --dataset_name Flickr
 
 # LP Line on PPI
 python3 link_prediction.py ../embeddings/ppi_graphsage_lp.pkl ../data/PPI-dataset/ppi_graph_lp_test_edges.pkl --dataset_name PPI

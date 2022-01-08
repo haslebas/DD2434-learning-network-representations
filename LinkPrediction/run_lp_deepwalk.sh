@@ -15,7 +15,7 @@ python3 link_prediction.py ../embeddings/reddit_lp_deepwalk_128d.pkl ../data/red
 python3 link_prediction.py ../embeddings/dblp-au_lp_deepwalk_128d.pkl ../data/DBLP-Au-dataset/dblp-au_graph_lp_test_edges.pkl --dataset_name DBLP-Au
 
 # LP DeepWalk on Flickr
-python3 link_prediction.py ../embeddings/dblp-au_lp_deepwalk_128d.pkl ../data/DBLP-Au-dataset/dblp-au_graph_lp_test_edges.pkl --dataset_name Flickr
+python3 link_prediction.py ../embeddings/flickr_lp_deepwalk_128d.pkl ../data/Flickr-dataset/flickr_graph_lp_test_edges.pkl --dataset_name Flickr
 
 # LP DeepWalk on PPI
 python3 link_prediction.py ../embeddings/ppi_lp_deepwalk_128d.pkl ../data/PPI-dataset/ppi_graph_lp_test_edges.pkl --dataset_name PPI
