@@ -1,10 +1,48 @@
 # Author: Luca Marini
-# file used to load epinion and twitter datasets
 import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
 import csv
 import argparse
 import pickle
+
+import numpy as np
 from stellargraph.data import EdgeSplitter
+import pandas as pd
+
+
+def get_node_features_from_edges(edges_path, exclude_char, separator, directed):
+    node_ids = []
+    edges = {}
+    with open(edges_path, 'r') as csvfile:
+        datareader = csv.reader(csvfile, delimiter=separator)
+        for line in datareader:
+            if exclude_char not in line[0]:
+                node_1 = int(line[0])
+                node_2 = int(line[1])
+
+                # add nodes without duplicates
+                if node_1 not in node_ids:
+                    node_ids.append(node_1)
+                if node_2 not in node_ids:
+                    node_ids.append(node_2)
+
+                if directed:
+                    edges.setdefault(node_1, []).append(node_2)
+                else:
+                    edges.setdefault(node_1, []).append(node_2)
+                    edges.setdefault(node_2, []).append(node_1)
+
+    node_ids.sort()
+    node_features = pd.DataFrame(0, index=node_ids, columns=node_ids)
+    if directed:
+        for node_a, nodes in edges.items():
+            for node in nodes:
+                node_features.at[node_a, node] = 1
+    else:
+        for node_a, nodes in edges.items():
+            for node in nodes:
+                node_features.at[node_a, node] = 1
+                node_features.at[node, node_a] = 1
+    return node_features, node_ids
 
 
 def load_graph(edges, exclude_char, separator, directed):
@@ -16,6 +54,7 @@ def load_graph(edges, exclude_char, separator, directed):
         datareader = csv.reader(csvfile, delimiter=separator)
         for line in datareader:
             if exclude_char not in line[0]:
+
                 G.add_edge(int(line[0]), int(line[1]))
 
     return G
