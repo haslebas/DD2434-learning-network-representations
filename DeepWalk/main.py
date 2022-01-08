@@ -2,7 +2,7 @@
 # Author: Filippa Kärrfelt 2021-12-20
 
 # Deepwalk associalted code: https://github.com/phanein/deepwalk
-# Other simpler DeepWalk implementation: https://github.com/gen3111620/DeepWalk
+# Other DeepWalk implementation: https://github.com/gen3111620/DeepWalk
 
 import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
 import numpy as np

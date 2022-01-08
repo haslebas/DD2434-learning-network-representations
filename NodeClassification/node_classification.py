@@ -30,12 +30,16 @@ def main(args):
             if key not in groups:
                 groups[key] = []
             groups[key].append(val)  
-    
+
     X = []
     list_y = []
     for node in sorted(groups.keys()):
+        if str(node) in emb:
+            node = str(node)
         if node in emb:
             X.append(emb[node])
+            if str(node).isnumeric():
+                node = int(node)
             list_y.append(groups[node])
     data = list(zip(X, list_y))
     random.shuffle(data)
