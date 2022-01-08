@@ -6,6 +6,8 @@
 embeddings_archive/
 embeddings/
 data/
+node2vec/emb
+node2vec/graph
 
 # Mac files
 .DS_Store
