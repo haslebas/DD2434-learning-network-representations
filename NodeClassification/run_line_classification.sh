@@ -15,6 +15,7 @@ python3 node_classification.py ../embeddings/small_cora_line_128d_T100.pkl ../da
 
 # Pubmed
 python3 node_classification.py ../embeddings/pubmed_line_128d_T100.pkl ../data/PubMed/data/group-edges.csv --dataset_name Pubmed
+python3 node_classification.py ../embeddings/pubmed_undir_line_128d_T100.pkl ../data/pubmed-dataset/data/group-edges.csv --dataset_name Pubmed
 
 # Reddit
 python3 node_classification.py ../embeddings/reddit_line_128d_T100.pkl ../data/reddit/reddit-class_map.csv --dataset_name Reddit

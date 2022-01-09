@@ -21,6 +21,9 @@ python3 link_prediction.py ../embeddings/ppi_line_128d_T100_lp.pkl ../data/PPI-d
 # LP Line on Astro-Ph
 python3 link_prediction.py ../embeddings/astro_line_128d_T100_lp.pkl ../data/AstroPh-dataset/astro_graph_lp_test_edges.pkl --dataset_name AstroPh
 
+# LP Line for PubMed
+python3 link_prediction.py ../embeddings/pubmed_undir_line_128d_T100_lp.pkl ../data/pubmed-dataset/pubmed_graph_undir_lp_test_edges.pkl --dataset_name Pubmed
+
 
 # DIRECTED
 
