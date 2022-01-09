@@ -1,12 +1,10 @@
+This project was part of the course DD2434 at KTH in Autumn 2021. 
+
 ## Organisation
 This project folder is structured as follows:
 
 - Running 'download_datasets.sh' creates a 'data' directory and puts all the datasets in there.
-- The script 'graph.py' takes paths to a dataset and creates a networkx graph object from that. This object is then pickled to a user-defined location. You can use the 'load_graphs.sh' instead of manually running 'graph.py'.
-- So far the script 'load_graphs.sh' creates pickle files for the BlogCatalog and Youtube datasets. They are saved in the corresponding directory in 'data'.
-- Every algorithm has its own dedicated directory where the code for that algorithm is located.
-
-## Good to know
-
-- We use networkx to store graphs.
-- Many python files use argparse to conveniently take and manage command-line arguments (see e.g. graph.py).
+- The folder LoadGraphs contains a shell script to load all the graphs into networkx format and store them using pickle.
+- Every algorithm has its own dedicated directory where the code for that algorithm is located along with a shell script to execute the code.
+- The embeddings should be stored in an additional 'embeddings'-directory. 
+- The evaluation on NC and LP are provided in the respective directories along with shell scripts that run all the evaluations and print the scores to the standard output.
