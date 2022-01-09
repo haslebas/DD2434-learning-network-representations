@@ -40,7 +40,7 @@ def sig(x):
 def line_first_order(G, timesteps, K, d, eps=0.1):
     """
     G: networkx graph
-    timesteps: number of optimisation steps relative to number of nodes
+    timesteps: number of optimisation steps
     K: number of negative edges for every positive edge
     d: dimensionality of embeddings
     """
@@ -52,7 +52,7 @@ def line_first_order(G, timesteps, K, d, eps=0.1):
     
     # asynchronous SGD to learn embeddings
     count = 0
-    N = timesteps * len(G.nodes)
+    N = timesteps
     while(count < N):
         random.shuffle(edges)
         for u, v in edges:
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     parser.add_argument('--seed', dest='seed', type=int, 
         help='fix random seeds', action='store', default=1)
     parser.add_argument('-T', dest='timesteps', type=int, 
-        help='number of optimisation steps relative to number of nodes', action='store', default=1)
+        help='number of optimisation steps', action='store', default=1)
     parser.add_argument('-K', dest='K', type=int, 
         help='number of negative samples for every edge', action='store', default=5)
     parser.add_argument('-d', dest='d', type=int, 

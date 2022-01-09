@@ -49,5 +49,7 @@ python3 load_graph_from_edges.py ../data/PPI-dataset/PP-Pathways_ppi.csv ../data
 python3 load_graph_from_edges.py ../data/AstroPh-dataset/ca-AstroPh.txt ../data/AstroPh-dataset/astro_graph_lp.gpickle --separator=$'\t' --excl_char="#"
 
 # load PubMed dataset and pickle the constructed networkx graph
-# python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir.gpickle pubmed ../data/Pubmed-dataset/data/
-# python3 directed_graph.py ../data/Pubmed-dataset/pubmed_graph_undir_lp.gpickle pubmed -l ../data/Pubmed-dataset/data/
+mkdir ../data/pubmed-dataset
+mkdir ../data/pubmed-dataset/data
+python3 directed_graph.py ../data/pubmed-dataset/pubmed_graph_undir.gpickle pubmed ../data/pubmed-dataset/data/
+python3 directed_graph.py ../data/pubmed-dataset/pubmed_graph_undir_lp.gpickle pubmed -l ../data/pubmed-dataset/data/
