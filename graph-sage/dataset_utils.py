@@ -1,16 +1,18 @@
 # author: Luca Marini
-import stellargraph as sg
+
 from stellargraph import StellarGraph
 from stellargraph import datasets
 import networkx as nx  # https://networkx.org/documentation/stable/tutorial.html
-import csv
 import numpy as np
 import pandas as pd
-import os
+import json
+from networkx.readwrite import json_graph
+from LoadGraphs.load_graph_from_edges import get_node_features_from_edges
 
 
-def get_graph_from_pickle(pickle_path, get_node_features=False):
+def get_graph_from_pickle(pickle_path, get_node_features=False, node_features=None):
     G = nx.read_gpickle(pickle_path)
+    print(nx.info(G))
     if get_node_features:
         num_nodes = len(list(nx.nodes(G)))
         node_features = np.eye(num_nodes, dtype=int)
@@ -20,70 +22,91 @@ def get_graph_from_pickle(pickle_path, get_node_features=False):
 
         G = StellarGraph.from_networkx(G, node_features=node_features_df)
     else:
-        G = StellarGraph.from_networkx(G)
+        G = StellarGraph.from_networkx(G, node_features=node_features)
     return G
 
 
-def get_node_labels(node_labels_path):
-    node_labels_df = pd.read_csv(node_labels_path, index_col=False, header=None)
-    labels = node_labels_df.set_index(0)[1]
-    labels.name = "labels"
-    # print(labels)
-    return labels
+def get_node_ids(node_ids_path):
+    node_ids_df = pd.read_csv(node_ids_path, index_col=False, header=None)
+    node_ids = node_ids_df.set_index(0)[1]
+    node_ids.name = "node_ids"
+    # print(node_ids)
+    return node_ids
 
 
 def get_dataset(dataset_name):
-    labels = []
-    if dataset_name == "cora":
+    node_ids = []
+    if dataset_name == "big_cora":
+        G = get_graph_from_pickle("../data/subelj_cora/cora_big_graph_dir_lp.gpickle", get_node_features=True)
+        node_ids = get_node_ids("../data/subelj_cora/data/group-edges.csv")
+    elif dataset_name == "small_cora":
+        #G = get_graph_from_pickle("../data/Cora-dataset/cora_graph_dir_lp.gpickle", get_node_features=True)
+        #node_ids = get_node_ids("../data/Cora-dataset/data/group-edges.csv")
         dataset = datasets.Cora()
-        G, labels = dataset.load(directed=True)
+        G, node_ids = dataset.load(directed=True)
     elif dataset_name == "pubmed":
+        #G = get_graph_from_pickle("../data/PubMed/pubmed_graph_dir_lp.gpickle", get_node_features=True)
+        #node_ids = get_node_ids("../data/PubMed/data/group-edges.csv")
         dataset = datasets.PubMedDiabetes()
-        G, labels = dataset.load()
+        G, node_ids = dataset.load()
     elif dataset_name == "blog_catalog":
-        G = get_graph_from_pickle("../data/BlogCatalog-dataset/blog_catalog_graph.gpickle", get_node_features=True)
-        labels = get_node_labels("../data/BlogCatalog-dataset/data/group-edges.csv")
+        G = get_graph_from_pickle("../data/BlogCatalog-dataset/blog_catalog_graph_lp.gpickle", get_node_features=True)
+        node_ids = get_node_ids("../data/BlogCatalog-dataset/data/group-edges.csv")
     elif dataset_name == "youtube":
         G = get_graph_from_pickle("../data/YouTube-dataset/youtube_graph.gpickle", get_node_features=True)
-        labels = get_node_labels("../data/YouTube-dataset/data/group-edges.csv")
+        node_ids = get_node_ids("../data/YouTube-dataset/data/group-edges.csv")
     elif dataset_name == "flickr":
         G = get_graph_from_pickle("../data/Flickr-dataset/flickr_graph.gpickle", get_node_features=True)
-        labels = get_node_labels("../data/Flickr-dataset/data/group-edges.csv")
-    elif dataset_name == "reddit":
-        G = get_graph_from_pickle("../data/Reddit-dataset/reddit_graph.gpickle", get_node_features=True)
+        node_ids = get_node_ids("../data/Flickr-dataset/data/group-edges.csv")
+    elif dataset_name == "twitter":
+        node_features, node_ids = get_node_features_from_edges("../data/Twitter-dataset/data/out.munmun_twitter_social",
+                                                               "%", " ", directed=True)
+        G = get_graph_from_pickle("../data/Twitter-dataset/twitter_graph_dir_lp.gpickle", get_node_features=False,
+                                  node_features=node_features)
+    elif dataset_name == "ppi":
+        node_features, node_ids = get_node_features_from_edges("../data/PPI-dataset/PP-Pathways_ppi.csv", "#", ",",
+                                                               directed=False)
+        G = get_graph_from_pickle("../data/PPI-dataset/ppi_graph_lp.gpickle", get_node_features=False,
+                                  node_features=node_features)
+    elif dataset_name == "astro-ph":
+        node_features, node_ids = get_node_features_from_edges("../data/AstroPh-dataset/ca-AstroPh.txt", "#", "\t",
+                                                               directed=False)
+        G = get_graph_from_pickle("../data/AstroPh-dataset/astro_graph_lp.gpickle", get_node_features=False,
+                                  node_features=node_features)
     elif dataset_name == "epinion":
-        G = get_graph_from_pickle("../data/Epinion-dataset/epinion_graph.gpickle", get_node_features=True)
-        # TODO: node_ids
-    elif dataset_name == "dbpl":
-        # https://stellargraph.readthedocs.io/en/stable/demos/link-prediction/attri2vec-link-prediction.html
-        data_dir = "../data/DBLP-dataset/data/"
+        node_features, node_ids = get_node_features_from_edges("../data/Epinions-dataset/soc-Epinions1.txt", "#", "\t",
+                                                               directed=True)
+        G = get_graph_from_pickle("../data/Epinions-dataset/epinions_graph_dir_lp.gpickle", get_node_features=False,
+                                  node_features=node_features)
+    elif dataset_name == "reddit":
+        prefix = "../data/reddit/reddit"
+        G_data = json.load(open(prefix + "-G.json"))
+        G = json_graph.node_link_graph(G_data)
+        if isinstance(G.nodes()[0], int):
+            conversion = lambda n: int(n)
+        else:
+            conversion = lambda n: n
+        G = get_graph_from_pickle("../data/reddit/reddit_graph.gpickle", get_node_features=True)
+        class_map = json.load(open(prefix + "-class_map.json"))
+        if isinstance(list(class_map.values())[0], list):
+            lab_conversion = lambda n: n
+        else:
+            lab_conversion = lambda n: int(n)
 
-        # Load the graph from the edge list
-        edgelist = pd.read_csv(
-            os.path.join(data_dir, "edgeList.txt"),
-            sep=",",
-            header=None,
-            names=["source", "target"],
-        )
-        edgelist["label"] = "cites"  # set the edge type
-
-        # Load paper content features, subjects and publishing years
-        feature_names = ["w_{}".format(ii) for ii in range(2476)]
-        node_column_names = feature_names + ["subject", "year"]
-        node_data = pd.read_csv(
-            os.path.join(data_dir, "content.txt"), sep="\t", header=None, names=node_column_names
-        )
-        # Construct the whole graph from edge list
-        G_all_nx = nx.from_pandas_edgelist(edgelist, edge_attr="label")
-        # Specify node types
-        nx.set_node_attributes(G_all_nx, "paper", "label")
-        # Get node features
-        all_node_features = node_data[feature_names]
-        # Create the Stellargraph with node features
-        G = sg.StellarGraph.from_networkx(G_all_nx, node_features=all_node_features)
+        class_map = {conversion(k): lab_conversion(v) for k, v in class_map.items()}
+        node_ids = class_map.values()
+    elif dataset_name == "dblp-ci":
+        node_features, node_ids = get_node_features_from_edges("../data/DBLP-Ci-dataset/dblp-cite.edges", "%", ",",
+                                                               directed=True)
+        G = get_graph_from_pickle("../data/DBLP-Ci-dataset/dblp-ci_graph_dir_lp.gpickle", get_node_features=True,
+                                  node_features=node_features)
+    elif dataset_name == "dblp-au":
+        node_features, node_ids = get_node_features_from_edges("../data/DBLP-Au-dataset/com-dblp.ungraph.txt", "#",
+                                                               "\t", directed=True)
+        G = get_graph_from_pickle("../data/DBLP-Au-dataset/dblp-au_graph_lp.gpickle", get_node_features=True,
+                                  node_features=node_features)
     else:
         raise Exception('The specified dataset is not available')
     print(G.info())
     nodes = list(G.nodes())
-    #print(nodes)
-    return G, labels, nodes
+    return G, node_ids, nodes

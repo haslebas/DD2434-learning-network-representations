@@ -2,46 +2,26 @@
 # inspired by https://colab.research.google.com/github/stellargraph/stellargraph/blob/master/demos/embeddings/
 # graphsage-unsupervised-sampler-embeddings.ipynb
 
-import networkx as nx # https://networkx.org/documentation/stable/tutorial.html
-
-import tensorflow as tf
 import argparse
 import random
 from stellargraph.mapper import GraphSAGELinkGenerator
 from stellargraph.layer import GraphSAGE, link_classification
 from stellargraph.data import UnsupervisedSampler
-from sklearn.model_selection import train_test_split
-
 from tensorflow import keras
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, f1_score
-
-from sklearn.decomposition import PCA
-from sklearn.manifold import TSNE
 from stellargraph.mapper import GraphSAGENodeGenerator
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import tensorflow_addons as tfa
-
+import pickle
 from dataset_utils import *
 
 
 def main(args):
     # load dataset
-    G, labels, nodes = get_dataset(args.dataset)
-
-    # https://networkx.org/documentation/stable/reference/readwrite/gpickle.html
-    #G = nx.read_gpickle("./data/Youtube-dataset/youtube_graph.gpickle")
-    #print('Loaded graph with %d nodes and %d edges' % (len(G.nodes), len(G.edges)))
+    G, labels, nodes = get_dataset(args.dataset_name)
 
     unsupervised_samples = UnsupervisedSampler(
         G, nodes=nodes, length=args.length, number_of_walks=args.number_of_walks
     )
 
     generator = GraphSAGELinkGenerator(G, args.batch_size, args.num_samples)
-    #generator = GraphSAGENodeGenerator(G, args.batch_size, args.num_samples)
-
     train_gen = generator.flow(unsupervised_samples)
 
     graphsage_model = GraphSAGE(
@@ -72,119 +52,42 @@ def main(args):
         shuffle=True,
     )
 
-
-
-
-
-
-
-    '''
-    from sklearn import preprocessing, feature_extraction, model_selection
-
-    labels_sampled = labels.sample(frac=0.8, replace=False, random_state=101)
-    train_labels, test_labels = model_selection.train_test_split(
-        labels_sampled,
-        train_size=0.05,
-        test_size=None,
-        stratify=labels_sampled,
-        random_state=42,
-    )
-
-    target_encoding = preprocessing.LabelBinarizer()
-    train_targets = target_encoding.fit_transform(train_labels)
-    test_targets = target_encoding.transform(test_labels)
-    test_gen = generator.flow(test_labels.index, test_targets)
-
-    test_metrics = model.evaluate(test_gen)
-    print("\nTest Set Metrics:")
-    for name, val in zip(model.metrics_names, test_metrics):
-        print("\t{}: {:0.4f}".format(name, val))
-    '''
-
     x_inp_src = x_inp[0::2]
     x_out_src = x_out[0]
     embedding_model = keras.Model(inputs=x_inp_src, outputs=x_out_src)
+    if args.labels_ids:
+        node_ids = labels.index
+    else:
+        node_ids = labels
 
-    node_ids = labels.index
-    print(node_ids)
-    print(len(node_ids))
-    print(G.info())
     node_gen = GraphSAGENodeGenerator(G, args.batch_size, args.num_samples).flow(node_ids)
 
     node_embeddings = embedding_model.predict(node_gen, workers=4, verbose=1)
 
-    node_subject = labels.astype("category").cat.codes
-
-    '''
-    # plot of the node embeddings
-    X = node_embeddings
-    if X.shape[1] > 2:
-        transform = TSNE  # PCA
-
-        trans = transform(n_components=2)
-        emb_transformed = pd.DataFrame(trans.fit_transform(X), index=node_ids)
-        emb_transformed["label"] = node_subject
-    else:
-        emb_transformed = pd.DataFrame(X, index=node_ids)
-        emb_transformed = emb_transformed.rename(columns={"0": 0, "1": 1})
-        emb_transformed["label"] = node_subject
-
-    alpha = 0.7
-
-    fig, ax = plt.subplots(figsize=(7, 7))
-    ax.scatter(
-        emb_transformed[0],
-        emb_transformed[1],
-        c=emb_transformed["label"].astype("category"),
-        cmap="jet",
-        alpha=alpha,
-    )
-    ax.set(aspect="equal", xlabel="$X_1$", ylabel="$X_2$")
-    plt.title(
-        "{} visualization of GraphSAGE embeddings".format(transform.__name__)
-    )
-    plt.show()
-    '''
-
-    # Downstream task
-    if args.task == "node_classification":
-        # node classification
-        print("node classification")
-
-        # X will hold the 50 input features (node embeddings)
-        X = node_embeddings
-        # y holds the corresponding target values
-        y = np.array(node_subject)
-    
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, train_size=0.05, test_size=None, stratify=y
-        )
-    
-        clf = LogisticRegression(verbose=0, solver="lbfgs", multi_class="auto")
-        clf.fit(X_train, y_train)
-
-        y_pred = clf.predict(X_test)
-
-        print('f1_micro: {}'.format(f1_score(y_test, y_pred, average='micro')))
-        print('f1_macro: {}'.format(f1_score(y_test, y_pred, average='macro')))
-    
-        print(pd.Series(y_pred).value_counts())
-    
-        print(pd.Series(y).value_counts())
-
-    else:
-        # link prediction
-        print("link prediction")
+    # dictionary with the embeddings
+    E = {}
+    for i, node_id in enumerate(node_ids):
+        if args.labels_ids:
+            node_subject = labels.astype("category").cat.codes
+            E[node_id] = node_embeddings[node_subject[node_id]]
+        else:
+            E[node_id] = node_embeddings[i]
+    # write the learned node embeddings into a pickle file
+    with open(args.output_path, 'wb') as handle:
+        pickle.dump(E, handle)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='graphsage - generation of node embeddings')
 
     # command-line arguments
-    parser.add_argument('-task', dest='task', type=str,
-                        help='downstream task', action='store', default="node_classification")
-    parser.add_argument('-dataset', dest='dataset', type=str,
-                        help='chosen dataset', action='store', default="reddit")
+    parser.add_argument('-output_path', type=str,
+                        help='path to output file where node embeddings are stored', action='store',
+                        default='../embeddings/dblp_au_graphsage_lp.pkl')
+    parser.add_argument('-lbls_ids', dest='labels_ids',
+                        help='are labels already ids', action='store_true')
+    parser.add_argument('-dataset', dest='dataset_name', type=str,
+                        help='chosen dataset', action='store', default="dblp-au")
     parser.add_argument('--seed', dest='seed', type=int,
                         help='fix random seeds', action='store', default=1)
     parser.add_argument('-e', dest='epochs', type=int,

@@ -12,6 +12,18 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import cross_val_score
 
+def get_score(X, y, seed, dataset_name):
+    model = OneVsRestClassifier(LogisticRegression(random_state=seed))
+    micro_scores = cross_val_score(model, X, y, cv=5, scoring='f1_micro')
+    macro_scores = cross_val_score(model, X, y, cv=5, scoring='f1_macro')
+
+    print('Dataset: ', dataset_name)
+    print('Micro scores are:')
+    print(micro_scores)
+    print('avg: ', np.average(micro_scores))
+    print('Macro scores are:')
+    print(macro_scores)
+    print('avg: ', np.average(macro_scores))
 
 def main(args):
     with open(args.embeddings_path, 'rb') as file:
@@ -42,17 +54,7 @@ def main(args):
     X, list_y = zip(*data)
     y = MultiLabelBinarizer().fit_transform(list_y)
 
-    model = OneVsRestClassifier(LogisticRegression(random_state=args.seed))
-    micro_scores = cross_val_score(model, X, y, cv=5, scoring='f1_micro')
-    macro_scores = cross_val_score(model, X, y, cv=5, scoring='f1_macro')
-    
-    print('Dataset: ', args.dataset_name)
-    print('Micro scores are:')
-    print(micro_scores)
-    print('avg: ', np.average(micro_scores))
-    print('Macro scores are:')
-    print(macro_scores)
-    print('avg: ', np.average(macro_scores))
+    get_score(X, y, args.seed, args.dataset_name)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='evaluate embeddings on node classification task')
