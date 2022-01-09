@@ -25,7 +25,7 @@ python3 link_prediction.py ../embeddings/astroph_graphsage_lp.pkl ../data/AstroP
 # DIRECTED
 
 # Line Cora (small) embeddings 
-python3 link_prediction.py ../embeddings/small_cora_graphsage_lp.pkl ../data/Cora-dataset/cora_graph_dir_lp_test_edges.pkl --dataset_name Cora-small -lbls_ids
+python3 link_prediction.py ../embeddings/small_cora_graphsage_lp.pkl ../data/Cora-dataset/cora_graph_dir_lp_test_edges.pkl --dataset_name Cora-small
 
 # Line Cora (big) embeddings 
 python3 link_prediction.py ../embeddings/big_cora_graphsage_lp.pkl ../data/subelj_cora/cora_big_graph_dir_lp_test_edges.pkl --dataset_name Cora-big
