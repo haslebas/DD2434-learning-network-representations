@@ -37,7 +37,7 @@ def get_node_ids(node_ids_path):
 def get_dataset(dataset_name):
     node_ids = []
     if dataset_name == "big_cora":
-        G = get_graph_from_pickle("../data/subelj_cora/cora_big_graph_dir_lp.gpickle", get_node_features=True)
+        G = get_graph_from_pickle("../data/subelj_cora/cora_big_graph_dir.gpickle", get_node_features=True)
         node_ids = get_node_ids("../data/subelj_cora/data/group-edges.csv")
     elif dataset_name == "small_cora":
         #G = get_graph_from_pickle("../data/Cora-dataset/cora_graph_dir_lp.gpickle", get_node_features=True)
@@ -45,10 +45,13 @@ def get_dataset(dataset_name):
         dataset = datasets.Cora()
         G, node_ids = dataset.load(directed=True)
     elif dataset_name == "pubmed":
-        #G = get_graph_from_pickle("../data/PubMed/pubmed_graph_dir_lp.gpickle", get_node_features=True)
-        #node_ids = get_node_ids("../data/PubMed/data/group-edges.csv")
-        dataset = datasets.PubMedDiabetes()
-        G, node_ids = dataset.load()
+        G = get_graph_from_pickle("../data/PubMed/pubmed_graph_dir_lp.gpickle", get_node_features=True)
+        node_ids = get_node_ids("../data/PubMed/data/group-edges.csv")
+    elif dataset_name == "pubmed_undir":
+        G = get_graph_from_pickle("../data/pubmed-dataset/pubmed_graph_undir_lp.gpickle", get_node_features=True)
+        node_ids = get_node_ids("../data/pubmed-dataset/data/group-edges.csv")
+        # dataset = datasets.PubMedDiabetes()
+        # G, node_ids = dataset.load()
     elif dataset_name == "blog_catalog":
         G = get_graph_from_pickle("../data/BlogCatalog-dataset/blog_catalog_graph_lp.gpickle", get_node_features=True)
         node_ids = get_node_ids("../data/BlogCatalog-dataset/data/group-edges.csv")

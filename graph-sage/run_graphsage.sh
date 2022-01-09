@@ -23,8 +23,8 @@ python3 main.py -output_path="../embeddings/big_cora_graphsage.pkl" -dataset="bi
 python3 main.py -output_path="../embeddings/big_cora_graphsage_lp.pkl" -dataset="big_cora" -task="lp"
 
 # small Cora
-python3 main.py -output_path="../embeddings/small_cora_graphsage.pkl" -dataset="small_cora" -task="nc"
-python3 main.py -output_path="../embeddings/small_cora_graphsage_lp.pkl" -dataset="small_cora" -task="lp"
+python3 main.py -output_path="../embeddings/small_cora_graphsage.pkl" -dataset="small_cora" -task="nc" -lbls_ids
+python3 main.py -output_path="../embeddings/small_cora_graphsage_lp.pkl" -dataset="small_cora" -task="lp" -lbls_ids
 
 # AstroPh
 python3 main.py -output_path="../embeddings/astroph_graphsage_lp.pkl" -dataset="astro-ph" -task="lp"

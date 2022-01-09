@@ -11,6 +11,7 @@ from tensorflow import keras
 from stellargraph.mapper import GraphSAGENodeGenerator
 import pickle
 from dataset_utils import *
+from NodeClassification.node_classification import get_score
 
 
 def main(args):
@@ -76,6 +77,16 @@ def main(args):
     with open(args.output_path, 'wb') as handle:
         pickle.dump(E, handle)
 
+    # node classification
+    if args.task == "nc":
+        X = node_embeddings
+        if args.labels_ids:
+            y = np.array(node_subject)
+        else:
+            y = np.array(node_ids)
+
+        get_score(X, y, args.seed, args.dataset_name)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='graphsage - generation of node embeddings')
@@ -83,11 +94,13 @@ if __name__ == '__main__':
     # command-line arguments
     parser.add_argument('-output_path', type=str,
                         help='path to output file where node embeddings are stored', action='store',
-                        default='../embeddings/dblp_au_graphsage_lp.pkl')
+                        default='../embeddings/pubmed_graphsage_lp.pkl')
     parser.add_argument('-lbls_ids', dest='labels_ids',
-                        help='are labels already ids', action='store_true')
+                        help='are labels already ids', action='store_true') #, default=True)
+    parser.add_argument('-task', dest='task', type=str,
+                        help='are labels already ids', action='store', default="nc")
     parser.add_argument('-dataset', dest='dataset_name', type=str,
-                        help='chosen dataset', action='store', default="dblp-au")
+                        help='chosen dataset', action='store', default="pubmed")
     parser.add_argument('--seed', dest='seed', type=int,
                         help='fix random seeds', action='store', default=1)
     parser.add_argument('-e', dest='epochs', type=int,
