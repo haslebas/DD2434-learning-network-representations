@@ -3,6 +3,9 @@ python3 node_classification.py ../embeddings/blogcat_netmf_128d.pkl ../data/Blog
 
 # big Cora
 python3 node_classification.py ../embeddings/cora_netmf_128d.pkl ../data/subelj_cora/data/group-edges.csv --dataset_name bigCora
+# exact embeddings:
+python3 node_classification.py ../embeddings/cora_netmf_exact_128d.pkl ../data/subelj_cora/data/group-edges.csv --dataset_name bigCora
+
 
 # small Cora
 python3 node_classification.py ../embeddings/small_cora_netmf_128d.pkl ../data/Cora-dataset/data/group-edges.csv --dataset_name smallCora

@@ -54,7 +54,7 @@ if [ -f "$FILE" ]; then
 else 
     echo "creating $FILE embeddings"
     # Run DeepWalk on Reddit
-    python main.py ../data/reddit/reddit_graph.gpickle ../embeddings/reddit_nc_deepwalk_128d_5_20_5 -n_walks 5 -t 20 -w 5
+    python main.py ../data/reddit/reddit_graph.gpickle ../embeddings/reddit_nc_deepwalk_128d_10_20_5 -n_walks 10 -t 20 -w 5
 fi
 
 FILE=../embeddings/flickr_deepwalk_128d_2_5_5.pkl

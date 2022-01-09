@@ -15,6 +15,10 @@ python3 main.py ../data/Cora-dataset/cora_graph_dir.gpickle ../embeddings/small_
 python3 main.py ../data/subelj_cora/cora_big_graph_dir_lp.gpickle ../embeddings/cora_netmf_128d_lp.pkl --large
 python3 main.py ../data/subelj_cora/cora_big_graph_dir.gpickle ../embeddings/cora_netmf_128d.pkl --large
 
+# run exact Cora
+python3 main.py ../data/subelj_cora/cora_big_graph_dir.gpickle ../embeddings/cora_netmf_exact_128d.pkl -w 1
+
+
 # PubMed (directed)
 python3 main.py ../data/PubMed/pubmed_graph_dir_lp.gpickle ../embeddings/pubmed_netmf_128d_lp.pkl --large
 python3 main.py ../data/PubMed/pubmed_graph_dir.gpickle ../embeddings/pubmed_netmf_128d.pkl --large

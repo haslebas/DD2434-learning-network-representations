@@ -20,4 +20,4 @@ python3 node_classification.py ../embeddings/pubmed_dir_deepwalk_128d.pkl ../dat
 python3 node_classification.py ../embeddings/pubmed_undir_deepwalk_128d.pkl ../data/Pubmed-dataset/data/group-edges.csv --dataset_name Pubmed-undir
 
 # Reddit
-python3 node_classification.py ../embeddings/reddit_nc_deepwalk_128d_2_5_5.pkl ../data/reddit/reddit-class_map.csv --dataset_name Reddit
+python3 node_classification.py ../embeddings/reddit_nc_deepwalk_128d_5_20_5.pkl ../data/reddit/reddit-class_map.csv --dataset_name Reddit

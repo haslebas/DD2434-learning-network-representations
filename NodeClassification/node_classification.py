@@ -36,6 +36,12 @@ def main(args):
     for node in sorted(groups.keys()):
         if str(node) in emb:
             node = str(node)
+        try:
+            key = int(node)
+            if key in emb:
+                node = int(key)
+        except ValueError:
+            pass
         if node in emb:
             X.append(emb[node])
             if str(node).isnumeric():
