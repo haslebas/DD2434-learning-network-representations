@@ -1,9 +1,11 @@
+# Author: Manuel Fraile
+
 import networkx as nx
-#import node2vecgood as n2v
 import argparse
 import pickle
 import numpy as np
 from node2vec import Graph
+from gensim.models import Word2Vec
 
 
 def parse_args():
@@ -19,10 +21,10 @@ def parse_args():
     parser.add_argument('--output', nargs='?', default='../emb/karate.emb',
                         help='Embeddings path')
 
-    parser.add_argument('--dimensions', type=int, default=3,
+    parser.add_argument('--dimensions', type=int, default=32,
                         help='Number of dimensions. Default is 128.')
 
-    parser.add_argument('--walk-length', type=int, default=5,
+    parser.add_argument('--walklength', type=int, default=20,
                         help='Length of walk per source. Default is 80.')
 
     parser.add_argument('--num-walks', type=int, default=10,
@@ -69,24 +71,25 @@ def set_p_q_params(dataset):
     elif dataset == "Wikipedia":
         return 4, 0.5
 
+    else:
+        return 1, 1
+
 
 def main(args):
     nx_G = nx.read_gpickle(args.input)
     p, q = set_p_q_params(args.dataset)
 
-    node2vec_g = Graph(nx_G, dimensions=32, walk_length=20, num_walks=200,
-                     workers=4, p=p, q=q, sampling_strategy={'q', 'p'})
+    node2vec_g = Graph(nx_G, walk_length=args.walklength, num_walks=200,
+                       workers=4, p=p, q=q, sampling_strategy={'q': 0.5, 'p': 0.2})
 
-    model = node2vec_g.fit(window=10, min_count=1, batch_words=4)
-
+    model = Word2Vec(node2vec_g.walks, window=10, min_count=1, batch_words=4, sg=1, workers=1,
+                     vector_size=args.dimensions)
     model.wv.save_word2vec_format(args.output + '.txt')
 
     # make embedding a dict:
     E = {}
     node_embeddings = open(args.output + '.txt', 'r')
     nodes = node_embeddings.readlines()
-
-    # print(nodes)
 
     num_nodes = nodes[0]
     print('num nodes: ', num_nodes)
@@ -98,32 +101,9 @@ def main(args):
 
     with open(args.output + '.pkl', 'wb') as handle:
         pickle.dump(E, handle)
-    print('Saved Node2Vec embeddings to pkl file')
-
-
-"""
-def load_graph():
-    dataset = datasets.Cora()
-    display(HTML(dataset.description))
-    return dataset.load(largest_connected_component_only=True)
-"""
+    print('Saved ' + args.dataset + ' Node2Vec embeddings to pkl file')
 
 
 if __name__ == "__main__":
     args = parse_args()
     main(args)
-
-
-
-    """
-    G, subjects = load_graph()
-
-    walker = BiasedRandomWalk(
-        G,
-        n=n_walks,
-        length=l_walks,
-        p=p,
-        q=q,
-    )
-    """
-
