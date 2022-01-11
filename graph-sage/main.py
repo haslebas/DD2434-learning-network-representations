@@ -11,10 +11,7 @@ from tensorflow import keras
 from stellargraph.mapper import GraphSAGENodeGenerator
 import pickle
 from dataset_utils import *
-
-
-def is_task_nc(task):
-    return task == "nc"
+from NodeClassification.node_classification import get_score
 
 
 def main(args):
@@ -59,7 +56,7 @@ def main(args):
     x_inp_src = x_inp[0::2]
     x_out_src = x_out[0]
     embedding_model = keras.Model(inputs=x_inp_src, outputs=x_out_src)
-    if is_task_nc(args.task):
+    if args.labels_ids:
         node_ids = labels.index
     else:
         node_ids = labels
@@ -71,7 +68,7 @@ def main(args):
     # dictionary with the embeddings
     E = {}
     for i, node_id in enumerate(node_ids):
-        if is_task_nc(args.task):
+        if args.labels_ids:
             node_subject = labels.astype("category").cat.codes
             E[node_id] = node_embeddings[node_subject[node_id]]
         else:
@@ -79,21 +76,16 @@ def main(args):
     # write the learned node embeddings into a pickle file
     with open(args.output_path, 'wb') as handle:
         pickle.dump(E, handle)
-    '''
-    # Downstream task
-    if is_task_nc(args.task):
-        # node classification
-        print("node classification")
 
+    # node classification
+    if args.task == "nc":
         X = node_embeddings
-        y = np.array(node_subject)
+        if args.labels_ids:
+            y = np.array(node_subject)
+        else:
+            y = np.array(node_ids)
 
         get_score(X, y, args.seed, args.dataset_name)
-
-    else:
-        # link prediction
-        print("link prediction")
-    '''
 
 
 if __name__ == '__main__':
@@ -102,11 +94,13 @@ if __name__ == '__main__':
     # command-line arguments
     parser.add_argument('-output_path', type=str,
                         help='path to output file where node embeddings are stored', action='store',
-                        default='../embeddings/epinion_graphsage_lp.pkl')
+                        default='../embeddings/pubmed_graphsage_lp.pkl')
+    parser.add_argument('-lbls_ids', dest='labels_ids',
+                        help='are labels already ids', action='store_true') #, default=True)
     parser.add_argument('-task', dest='task', type=str,
-                        help='downstream task', action='store', default="lp")
+                        help='are labels already ids', action='store', default="nc")
     parser.add_argument('-dataset', dest='dataset_name', type=str,
-                        help='chosen dataset', action='store', default="epinion")
+                        help='chosen dataset', action='store', default="pubmed")
     parser.add_argument('--seed', dest='seed', type=int,
                         help='fix random seeds', action='store', default=1)
     parser.add_argument('-e', dest='epochs', type=int,
